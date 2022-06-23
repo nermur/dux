@@ -50,8 +50,6 @@ elif [[ ${IS_CHROOT} -eq 0 ]]; then
 	WHICH_USER="${LOGIN_USER}" && export WHICH_USER
 fi
 
-BACKUPS="/home/${WHICH_USER}/dux_backups" && export BACKUPS
-
 # NOTES:
 # trap's EXIT signal is for the Bash instance as a whole, not per "source"d script
 _flatpak_silent() {

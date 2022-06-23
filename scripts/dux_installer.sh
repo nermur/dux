@@ -20,12 +20,6 @@ if ! grep -q "'archiso'" /etc/mkinitcpio.d/linux.preset; then
 	echo -e "\nERROR: Do not run this script outside of the Arch Linux ISO!\n"
 	exit 1
 fi
-if [[ ${use_disk_encryption} -eq 1 ]]; then
-	if cryptsetup status "lukspart" | grep -q "inactive"; then
-		echo -e "\nERROR: Forgot to mount the LUKS2 partition as 'lukspart'?\n"
-		exit 1
-	fi
-fi
 
 mkdir -p "${GIT_DIR}/logs"
 # Makes scripts below executable.
@@ -34,7 +28,7 @@ chmod +x -R "${GIT_DIR}"
 clear
 
 _password_prompt() {
-	read -rp "Enter a new password for the username \"${INITIAL_USER}\": " DESIREDPW
+	read -rp "Enter a new password for the username \"${WHICH_USER}\": " DESIREDPW
 	if [[ -z ${DESIREDPW} ]]; then
 		echo -e "\nNo password was entered, please try again.\n"
 		_password_prompt
@@ -51,43 +45,33 @@ _password_prompt() {
 _password_prompt
 
 _01() {
-	("${GIT_DIR}/scripts/01-pre_chroot.sh") |& tee "${GIT_DIR}/logs/01-pre_chroot.log" || return
+	("${GIT_DIR}/scripts/01-root.sh") |& tee "${GIT_DIR}/logs/01-root.log" || return
 }
 _01
 
-# /mnt needs access to Dux's contents.
-[[ -d "/mnt/root/dux" ]] &&
-	rm -rf "/mnt/root/dux"
-cp -f -R "${GIT_DIR}" "/mnt/root"
-
 _02() {
-	(arch-chroot /mnt "${GIT_DIR}/scripts/02-post_chroot_root.sh") |& tee "${GIT_DIR}/logs/02-post_chroot_root.log" || return
+	(sudo -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/02-nonroot.sh") |& tee "${GIT_DIR}/logs/02-nonroot.sh" || return
 }
 _02
 
-_03() {
-	(arch-chroot /mnt sudo -u "${INITIAL_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "/home/${INITIAL_USER}/dux/scripts/03-post_chroot_user.sh") |& tee "${GIT_DIR}/logs/03-post_chroot_user.log" || return
-}
-_03
-
 _pipewire() {
-	(arch-chroot /mnt "${GIT_DIR}/scripts/Pipewire.sh") |& tee "${GIT_DIR}/logs/Pipewire.log" || return
+	("${GIT_DIR}/scripts/Pipewire.sh") |& tee "${GIT_DIR}/logs/Pipewire.log" || return
 }
 _pipewire
 
 _gpu() {
 	[[ ${disable_gpu} -ne 1 ]] &&
-		(arch-chroot /mnt "${GIT_DIR}/scripts/GPU.sh") |& tee "${GIT_DIR}/logs/GPU.log" || return
+		("${GIT_DIR}/scripts/GPU.sh") |& tee "${GIT_DIR}/logs/GPU.log" || return
 }
 _gpu
 
 _desktop_environment() {
 	case ${desktop_environment} in
 	1)
-		(arch-chroot /mnt "${GIT_DIR}/scripts/GNOME.sh") |& tee "${GIT_DIR}/logs/GNOME.log" || return
+		("${GIT_DIR}/scripts/GNOME.sh") |& tee "${GIT_DIR}/logs/GNOME.log" || return
 		;;
 	2)
-		(arch-chroot /mnt "${GIT_DIR}/scripts/KDE.sh") |& tee "${GIT_DIR}/logs/KDE.log" || return
+		("${GIT_DIR}/scripts/KDE.sh") |& tee "${GIT_DIR}/logs/KDE.log" || return
 		;;
 	*)
 		printf "\nNOTICE: No desktop environment was selected.\n"
@@ -96,20 +80,14 @@ _desktop_environment() {
 }
 _desktop_environment
 
-_04() {
-	(arch-chroot /mnt "${GIT_DIR}/scripts/04-finalize.sh") |& tee "${GIT_DIR}/logs/04-finalize.log" || return
+_03() {
+	("${GIT_DIR}/scripts/03-finalize.sh") |& tee "${GIT_DIR}/logs/03-finalize.log" || return
 }
-_04
-
-rm -rf "/mnt/root/dux/logs"
-cp -f -R "${GIT_DIR}/logs" "/mnt/root/dux"
-
-rm -rf "/mnt/home/${INITIAL_USER:?}/dux/logs"
-cp -f -R "${GIT_DIR}/logs" "/mnt/home/${INITIAL_USER}/dux"
+_03
 
 # Set correct permissions.
 _permissions() {
-	(arch-chroot /mnt "chown" -R "${INITIAL_USER}:${INITIAL_USER}" /home/"${INITIAL_USER}"/{dux,dux_backups})
+	(chown -R "${WHICH_USER}:${WHICH_USER}" "${GIT_DIR}")
 }
 _permissions
 

@@ -30,11 +30,28 @@ else
         grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
-# Without this, Dux will not function correctly if ran by a different user than the home directories' assigned user.
-git config --global --add safe.directory /home/"${WHICH_USER}"/dux
-git config --global --add safe.directory /root/dux
+_snapper() {
+    (bash "${GIT_DIR}/scripts/snapper.sh") |& tee "${GIT_DIR}/logs/snapper.log"
+}
+_snapper
+
+export DUX_INSTALLER=1
+if [[ ${XDG_SESSION_DESKTOP} = "GNOME" ]] && [[ ${allow_gnome_rice} -eq 1 ]]; then
+    _gnome_rice() {
+        (bash "/home/${WHICH_USER}/dux/scripts/rice_GNOME.sh") |& tee "${GIT_DIR}/logs/rice_GNOME.log"
+        (sudo -H -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "/home/${WHICH_USER}/dux/scripts/non-SU/rice_GNOME_part2.sh") |& tee "${GIT_DIR}/logs/rice_GNOME_part2.log"
+    }
+    _gnome_rice
+elif [[ ${XDG_SESSION_DESKTOP} = "KDE" ]] && [[ ${allow_kde_rice} -eq 1 ]]; then
+    _kde_rice() {
+        (bash "/home/${WHICH_USER}/dux/scripts/rice_KDE.sh") |& tee "${GIT_DIR}/logs/rice_KDE.log"
+        (sudo -H -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "/home/${WHICH_USER}/dux/scripts/non-SU/rice_KDE_part2.sh") |& tee "${GIT_DIR}/logs/rice_KDE_part2.log"
+    }
+    _kde_rice
+fi
 
 _cleanup() {
+    chown -R "${WHICH_USER}:${WHICH_USER}" "${GIT_DIR}"
     echo "%wheel ALL=(ALL) ALL" >/etc/sudoers.d/custom_settings
 }
 trap _cleanup EXIT

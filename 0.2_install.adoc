@@ -9,21 +9,20 @@ ifdef::env-github[]
 endif::[]
 :imagesdir: imgs/
 
+. Boot into Manjaro using free drivers if using an Intel or AMD GPU; non-free if a NVIDIA GPU.
 . Run "Install Manjaro Linux".
 ** Ensure the following settings are used (note: "Encrypt system" can be used):
 image:vmware_IAMa3yLRr3.png[]
 . After installation is complete, restart into your new system.
 
 ___
-. `# git clone https://github.com/nermur/dux`
+. `git clone https://github.com/nermur/dux`
 
-. Open `~/dux/configs/settings.sh` in your editor of choice, likely `vim` or `nano`
+. Open `~/dux/configs/settings.sh` in your editor of choice, likely `vi` or `nano`
 ** NOTE: Don't remove options in Dux's configs, just disable them.
 
-. `# bash ~/dux/scripts/00-format_disk.sh`
-** NOTE: Not needed for use on a pre-existing Dux installation.
-
-. `# bash ~/dux/scripts/dux_installer.sh`
+. `sudo git config --global --add safe.directory ~/dux`
+. `sudo bash ~/dux/scripts/dux_installer.sh`
 ** Can optionally be ran with `DEBUG=1` (put before `bash`) for more verbose logs and troubleshooting.
 
 ___

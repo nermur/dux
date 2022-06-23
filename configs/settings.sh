@@ -15,12 +15,6 @@ system_keymap="us"
 # Supported printer list: https://www.openprinting.org/printers
 hardware_printers_and_scanners="1"
 
-# WIP, but for now: https://wiki.archlinux.org/title/Fprint#Configuration
-hardware_fingerprint_reader="0"
-
-# 1: LUKS2 encryption is intended here for those using portable devices.
-use_disk_encryption="0"
-
 # 1: GRUB2
 # 2: rEFInd
 bootloader_type="2"
@@ -47,12 +41,6 @@ no_mitigations="1"
 #
 # Countries not listed here are at your own risk!
 reflector_countrylist="US,CA"
-
-#- GNOME is more stable than KDE.
-# 0:  Don't install a desktop environment (use your own).
-# 1:  GNOME  -> https://www.gnome.org/
-# 2:  KDE    -> https://kde.org/plasma-desktop/
-desktop_environment="1"
 
 # === Desktop Environment: GNOME ===
 # GNOME Display Manager

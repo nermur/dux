@@ -12,22 +12,17 @@ endif::[]
 NOTE: Skip to link:0.1_start.adoc[0.1_start.adoc] for installation.
 
 == Requirements
-* x86_64 processor/CPU; arm64 and others aren't supported.
-** If booting into the Arch Linux ISO fails on UEFI, a very rare IA32 UEFI BIOS is used. Follow link:https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface#Booting_64-bit_kernel_on_32-bit_UEFI[these instructions] to successfully boot the Arch Linux ISO.
+* A x86_64 processor/CPU; arm64 and others aren't officially supported, but might work fine.
 * link:https://archive.is/QwLMB[Disable UEFI Secure Boot]
 ** If convincing is needed, link:https://github.com/pbatard/rufus/wiki/FAQ#Why_do_I_need_to_disable_Secure_Boot_to_use_UEFINTFS[read this].
-* The latest link:https://archlinux.org/download/[Arch Linux ISO]; if you have no torrent client, use link:https://www.qbittorrent.org/download.php[qBittorrent].
-** A >=1GB USB to flash the Arch Linux ISO on.
+* A >=3GB USB to flash a Manjaro ISO on.
 
 == Goals
-* It's just Arch Linux.
-** As a bonus, Dux won't brand itself on the system at all besides a disk name.
-
 * *Resilience*
 ** Backups are made for every file/folder modified by Dux.
 ** The built-in ricing is ensured to not cause breakages in future updates for both GNOME and KDE.
 ** No third-party Pacman (package) repositories are ever used.
-** The official Arch Linux ISO is used, as it's a solid foundation that also has an entire team to maintain it.
+** Official Manjaro ISOs are used, they're a solid foundation, and they have many maintainers instead of one.
 
 * *Stability*
 ** Dux has a unique take on "ricing" (customization) by avoiding the following:
@@ -129,7 +124,6 @@ NOTE: These I think are decent for what they are. Some of the code and ideas in 
 . https://www.arcolinux.info/ or https://arcolinux.com/
 ** There are many good learning resources on Arch Linux provided by here too.
 . https://endeavouros.com/
-. https://manjaro.org/
 . https://anarchyinstaller.gitlab.io/
 . https://github.com/classy-giraffe/easy-arch
 . https://github.com/ChrisTitusTech/ArchTitus
