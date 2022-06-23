@@ -1,0 +1,139 @@
+:experimental:
+ifdef::env-github[]
+:icons:
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+:imagesdir: imgs/
+
+NOTE: Skip to link:0.1_start.adoc[0.1_start.adoc] for installation.
+
+== Requirements
+* x86_64 processor/CPU; arm64 and others aren't supported.
+** If booting into the Arch Linux ISO fails on UEFI, a very rare IA32 UEFI BIOS is used. Follow link:https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface#Booting_64-bit_kernel_on_32-bit_UEFI[these instructions] to successfully boot the Arch Linux ISO.
+* link:https://archive.is/QwLMB[Disable UEFI Secure Boot]
+** If convincing is needed, link:https://github.com/pbatard/rufus/wiki/FAQ#Why_do_I_need_to_disable_Secure_Boot_to_use_UEFINTFS[read this].
+* The latest link:https://archlinux.org/download/[Arch Linux ISO]; if you have no torrent client, use link:https://www.qbittorrent.org/download.php[qBittorrent].
+** A >=1GB USB to flash the Arch Linux ISO on.
+
+== Goals
+* It's just Arch Linux.
+** As a bonus, Dux won't brand itself on the system at all besides a disk name.
+
+* *Resilience*
+** Backups are made for every file/folder modified by Dux.
+** The built-in ricing is ensured to not cause breakages in future updates for both GNOME and KDE.
+** No third-party Pacman (package) repositories are ever used.
+** The official Arch Linux ISO is used, as it's a solid foundation that also has an entire team to maintain it.
+
+* *Stability*
+** Dux has a unique take on "ricing" (customization) by avoiding the following:
+*** Stringing together a bunch of different software by different developers, likely also dealing with conflicting opinions.
+*** Having to resort to manpages/manuals and configuration files, instead of trying out changes in a concise environment (what the developer exposes in a GUI, example: KDE's System Settings).
+
+* *KISS*
+** Dux heavily benefits from simplicity for both the user and the programmer.
+*** This simplicity makes way for extending more time into what matters more, like having a program to easily manage and pick from known good configurations of software.
+
+** If there's a better way of doing something which leads into additional simplicity for the big picture, that should be pursued as well.
+
+* To be forked.
+** Want to contribute but disagree with something in link:CONTRIBUTING.adoc[CONTRIBUTING.adoc]? No problem, Dux has been fully intended to be easy for you to make the Arch Linux installer you want.
+*** Credit (a link to Dux in the README) should be given so others can find their way back to here, but it's optional (despite what the license says).
+**** I use the strongest open-source license due to the legal protections it grants me in my home country of the United States, it'd be foolish not to do so.
+
+== Notable features installed by Dux
+* `KDE` and `GNOME` desktop environments having an equal level of support/testing.
+
+* Virtual machine guest support
+** QEMU (multiple GPU drivers, such as QXL and Virtio), VMWare, Hyper-V, and VirtualBox.
+
+* Ability to boot alongside other operating systems such as Windows 11.
+** Catch: Alternative OS installs can't be on the same disk/drive/storage Dux installed Arch Linux to.
+
+* Support for old to new NVIDIA, AMD, and Intel GPUs.
+** Nouveau drivers can optionally be tweaked to be relatively stable without sacrificing speed (on a 650 Ti), which by default was very unstable.
+** Offloading tasks to a different GPU is also supported, even on NVIDIA.
+
+* Sharp and clear font rendering for low-DPI and high-DPI displays to emphasize readability.
+** Websites or software that use Microsoft's fonts also look as intended.
+
+* `LUKS2`
+** Disk encryption to act as an anti-theft measure with minimal performance reduction.
+
+* `zRAM`
+** Memory compression, to stop relying on a disk swap file which can be slow (heavy I/O usage) and reduce the life-span of disks.
+
+* `Gamemode`
+** Allows for a process to request temporary disabling of power-saving features for extra performance, mainly used by Lutris for video games.
+
+* `BBRv2`: A TCP congestion control for lower bufferbloat; read about its positive effects on download/upload speeds and latency link:https://archive.ph/l0zc8[here].
+** NOTE: qdisc is left at default, rather than the CAKE qdisc being used: +
+https://github.com/systemd/systemd/issues/9725#issuecomment-564872011
+
+* `Btrfs` is used to: 
+** Compress data in real-time without noticeable performance impacts, reducing write amplification (increases longevity of disks by lowering disk usage), and increasing read speeds on slow disks.
+** Have high-performance and deduplicated "snapshots" (backups) of key areas, which turns Arch Linux updates breaking software into a small nuisance, as it's very quick and easy to restore to a previous snapshot.
+** Allow for an easier data recovery if a disk gets damaged and/or starts to have bad sectors.
+** To once a month automatically check (Scrub) over all filesystem data and metadata and verifying the checksums, repairing damage if present and possible.
+
+* `Snapper` instead of `Timeshift`
+** `Timeshift` is limited to taking snapshots of @ (root) and @home only.
+*** Taking snapshots encompassing all of @ (root) is very wasteful; Dux specifically makes Btrfs subvolumes for directories that should never be snapshotted, which are: `/srv, /var/cache/pacman/pkg, /var/log, /home`
+** `Snapper` makes read-only and replicable snapshots.
+
+* `GPT`
+** Compared to MBR, GPT supports disks above 2TB capacity, 128 primary partitions instead of 4, and protects against boot record corruption.
+
+* `I/O scheduling changes`
+** `mq-deadline` for SSDs and eMMCs (flash/USB disks/SD cards), `bfq` for spinning disks (HDDs). +
+This makes these types of storage highly responsive to your inputs.
+
+* `irqbalance`
+** Manages IRQ interrupts more efficiently by being more aware of the current environment. One example is offloading IRQ interrupts to CPU affinities which have the lowest load on them. Another example is respecting VMs having their CPU affinities isolated, meaning irqbalance will offload the IRQ interrupts to CPU affinities that aren't isolated.
+
+* `Flatpak`
+** Visual inconsistencies with Flatpaks are mostly fixed.
+
+* `thermald`
+** Provides a large performance boost for some Intel laptops, with no observable downsides for other hardware combinations.
+** https://www.phoronix.com/scan.php?page=article&item=intel-thermald-tgl&num=2
+
+* Disabled `Baloo` "full-text" indexer
+** It's preferred to load files on demand then cache their thumbnails; a simpler approach that works reliably and without performance issues.
+** `Baloo` has a link:https://bugs.kde.org/show_bug.cgi?id=402154[long-standing bug] related to usage of Btrfs subvolumes (which we use), that greatly impacts disk usage and overall system performance.
+*** Even without this bug, file indexers daemons like `Baloo` won't be used as their design is conceptually over-complicated, and will always be problematic.
+
+* No `systemd-oomd` and no `earlyoom`
+** Let the Linux kernel handle OOM (out of memory) situations, since our usage of `zRAM` makes Linux handle its OOM killer much more efficiently than before (still not good however).
+*** Likely from link:https://www.phoronix.com/scan.php?page=news_item&px=Linux-MGLRU-v9-Promising[Linux kernel 5.20 and beyond] there'd be substantial improvements to OOM situations, that make `systemd-oomd` and `earlyoom` not helpful.
+
+* `dnsmasq` and `openresolv`, instead of `systemd-resolved` and `systemd-resolvconf`
+** To support VPN "network locking", and to ensure DNS resolution is reliable.
+
+* `nftables`
+** https://firewalld.org/2018/07/nftables-backend
+
+* `NetworkManager` defaulting to `iwd` for its WiFi backend, for increased network stability and performance.
+
+* `dbus-broker`
+** Replaces `dbus-daemon` for the system bus, as it's faster and more stable.
+
+== Other Arch Linux installers
+
+NOTE: These I think are decent for what they are. Some of the code and ideas in Dux have been inspired by what they've done for their projects.
+
+. https://www.arcolinux.info/ or https://arcolinux.com/
+** There are many good learning resources on Arch Linux provided by here too.
+. https://endeavouros.com/
+. https://manjaro.org/
+. https://anarchyinstaller.gitlab.io/
+. https://github.com/classy-giraffe/easy-arch
+. https://github.com/ChrisTitusTech/ArchTitus
+. https://garudalinux.org/
+
+___
+=> link:0.1_start.adoc[0.1_start.adoc]

@@ -1,0 +1,43 @@
+:experimental:
+ifdef::env-github[]
+:icons:
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+:imagesdir: imgs/
+
+. After finished rebooting:
+** Open "Konsole".
+*** `# sudo bash ~/dux/scripts/05-booted.sh`
+. Configure `~/dux/configs/optional_software.sh` with a text editor of your choice.
+** After done configuring, run: +
+`# sudo bash ~/dux/scripts/software_catalog.sh`
+
+== Terminal commands
+* Package manager:
+** `$ paru -Syu`: Update all non-AUR and AUR packages
+** `# pacman -Syu`: Update all non-AUR packages
+
+== Graphical environments
+NOTE: Win/Super/kbd:[Meta]/Mod4 are the same key, it's usually between kbd:[LCtrl] and kbd:[LAlt].
+
+* Open the help dialog (shows keybinds): kbd:[Meta] + kbd:[LShift] + kbd:[a] 
+
+== Tips 
+* If GNOME or KDE locks up/crashes, it's likely from a bad video driver such as VMWare SVGA (VMWare and VirtualBox's GPU).
+** GNOME: Logout of GNOME, pick a user, then click the gear to use "GNOME on Xorg". Or switch to TTY4 via kbd:[LCtrl + LAlt + F4] and edit `/etc/gdm/custom.conf` to disable Wayland.
+
+* Changing icon colors:
+** Example: `# papirus-folders -C yaru`
+** `# papirus-folders -l`: List all available colors.
+
+== Warnings
+* Avoid doing the following for Btrfs Assistant:
+** Enabling quotas
+** Deleting subvolumes
+
+___
+*If you have issues, please read => link:potential_fixes.adoc[potential_fixes.adoc]*

@@ -1,0 +1,70 @@
+:experimental:
+ifdef::env-github[]
+:icons:
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+:imagesdir: imgs/
+
+=== Pick an ISO
+https://manjaro.org/download/
+
+Supported by Dux: Plasma Desktop Minimal or Gnome Desktop Minimal.
+
+=== Cautionary tale about Windows dual-booting
+[%collapsible]
+====
+Windows cannot be trusted; Windows 10 LTSC 2019 erased the partitions on my _previously_ ext4 formatted 4TB drive, and damaged that ext4 filesystem beyond repair.
+
+NOTE: This drive was never mounted in Windows, and was not the primary disk; the primary disk had both Linux and Windows installed. +
+It's 29 Nov 2021 and the same drive has seemingly no issues, being mainly a video archival drive as it was then; this damage caused by Windows happened in ~2019.
+
+image:windows1.png[]
+image:windows2.png[]
+
+====
+
+== Writing ISO to USB
+WARNING: Will destroy all previous data on the targeted device.
+
+NOTE: -> For `dd` <- +
+`bs=8M` is optimal for most USBs. +
+If desired, benchmark `bs=` from 2M up to 16M (increment by 2M) to reserve for future usage.
+
+=== Windows
+. Download and install rufus-$version.exe +
+https://github.com/pbatard/rufus/releases
+. Add the Arch ISO through Select, click Start, then write in DD Image mode.
+
+=== macOS
+. Use https://github.com/balena-io/etcher/releases[balenaEtcher].
+
+=== Linux
+. Use https://github.com/balena-io/etcher/releases[balenaEtcher].
+
+.dd method (a not recommended alternative)
+[%collapsible]
+====
+. Throughly list disks and partitions; to see what disk/drive you are going to format. +
+`$ lsblk -o PATH,MODEL,PARTLABEL,FSTYPE,FSVER,SIZE,FSUSE%,FSAVAIL,MOUNTPOINTS`
+
+. Don't append numbers to the end of /dev/EXAMPLE +
+`# dd if=/path/to/archkbd:[TAB] of=/dev/EXAMPLE bs=8M oflag=direct status=progress`
+====
+
+=== OpenBSD
+. List all available disks: +
+`$ dmesg|egrep '^([cswf]d). '` or `$ df -h`
+
+. List the partitions of a disk, and show sizes in gigabytes (-p g): +
+`# disklabel -p g EXAMPLE`
+
+. Don't append numbers to the end of /dev/EXAMPLE: +
+`# dd bs=4M if=/path/to/archkbd:[TAB] of=/dev/EXAMPLE conv=sync`
+
+___
+Once booted into the Manjaro ISO, proceed to: +
+=> link:0.2_install.adoc[0.2_install.adoc]

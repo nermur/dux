@@ -1,0 +1,49 @@
+:experimental:
+ifdef::env-github[]
+:icons:
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+:imagesdir: imgs/
+
+=== Recommended tools
+. https://github.com/koalaman/shellcheck | link:https://github.com/vscode-shellcheck/vscode-shellcheck[VS Code addon]
+. https://github.com/mvdan/sh#shfmt | link:https://github.com/foxundermoon/vs-shell-format[VS Code addon]
+. https://github.com/hangxingliu/vscode-systemd
+
+=== These specific contributions won't be accepted, please make your own fork and be willing to give full support for it.
+
+NOTE: The overall quality of Dux degrades when adding features/options that don't get daily use by the person that primarily added those features/options in the first place. +
+You can expect higher quality from forking and doing this work yourself, since you know exactly why you want what you've added and how it should function, while I don't.
+
+* Other Linux kernels, especially `linux-hardened` and `linux-zen`.
+** `linux-zen` used to be Dux's default, but it caused some PCs to fail booting while `linux` and `linux-lts` wouldn't.
+
+* Installers & uninstallers for other desktop environments, and any window manager setups.
+
+* Option to disable Flatpaks.
+** I would never test for this, that is the issue. Some Flatpaks are chosen on the basis that they function better than the Arch variant, and vice versa.
+
+* Bootloaders with no support for Btrfs snapshots, such as `systemd-boot`.
+
+* Alternative initramfs generators, such as Booster or Dracut.
+** A lot can go wrong easily, in a similar way that changing Linux kernels could.
+
+* UEFI secure boot support.
+
+* Encrypted /boot support.
+
+* Ricing oriented:
+** Any GNOME plugins from the AUR.
+
+=== Indirect ways to contribute
+* Vote for these packages on the AUR, to give them a better chance of being officially packaged:
+** https://aur.archlinux.org/packages/btrfs-assistant
+** https://aur.archlinux.org/packages/opensnitch
+** https://aur.archlinux.org/packages/qps
+** https://aur.archlinux.org/packages/refind-btrfs
+** https://aur.archlinux.org/packages/vorta
+** https://aur.archlinux.org/packages/webcord
