@@ -87,6 +87,7 @@ _move2bkup() {
 		fi
 	done
 }
+
 _pkgs_aur_add() {
 	[[ -n ${PKGS_AUR} ]] &&
 		# Use -Syu instead of -Syuu for paru.

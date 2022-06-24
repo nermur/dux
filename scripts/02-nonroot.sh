@@ -20,16 +20,14 @@ if ! hash paru >&/dev/null; then
 fi
 
 _set_font_preferences() {
-	_move2bkup "/home/${WHICH_USER}/.config/fontconfig/conf.d/99-custom.conf" &&
-		cp "${cp_flags}" /etc/fonts/local.conf "/home/${WHICH_USER}/.config/fontconfig/conf.d/"
+	\cp "${cp_flags}" /etc/fonts/local.conf "/home/${WHICH_USER}/.config/fontconfig/conf.d/"
 }
 
 _other_user_files() {
 	if ! grep -q '[ -f ".zsh_dux" ] && source .zsh_dux' "/home/${WHICH_USER}/.zshrc.local" >&/dev/null; then
 		printf '\n[ -f ".zsh_dux" ] && source .zsh_dux' >>"/home/${WHICH_USER}/.zshrc.local"
 	fi
-	_move2bkup "/home/${WHICH_USER}/.zsh_dux" &&
-		cp "${cp_flags}" "${GIT_DIR}"/files/home/.zsh_dux "/home/${WHICH_USER}/"
+	\cp "${cp_flags}" "${GIT_DIR}"/files/home/.zsh_dux "/home/${WHICH_USER}/"
 }
 
 PKGS_AUR+="btrfs-assistant "

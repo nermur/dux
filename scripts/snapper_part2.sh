@@ -14,11 +14,8 @@ if [[ ${bootloader_type} -eq 1 ]]; then
     _pkgs_add
 
     _grub_btrfs_pacman_hook() {
-        _move2bkup "/usr/share/libalpm/scripts/grub-mkconfig"
-        _move2bkup "/etc/pacman.d/hooks/zz_snap-pac-grub-post.hook"
-
-        cp "${cp_flags}" "${GIT_DIR}"/files/usr/share/libalpm/scripts/grub-mkconfig "/usr/share/libalpm/scripts/"
-        cp "${cp_flags}" "${GIT_DIR}"/files/etc/pacman.d/hooks/zz_snap-pac-grub-post.hook "/etc/pacman.d/hooks/"
+        \cp "${cp_flags}" "${GIT_DIR}"/files/usr/share/libalpm/scripts/grub-mkconfig "/usr/share/libalpm/scripts/"
+        \cp "${cp_flags}" "${GIT_DIR}"/files/etc/pacman.d/hooks/zz_snap-pac-grub-post.hook "/etc/pacman.d/hooks/"
 
         # GRUB_BTRFS_LIMIT="10": Don't display more than 10 snapshots.
         # GRUB_BTRFS_SHOW_SNAPSHOTS_FOUND="false": Don't specify every snapshot found, instead say "Found 10 snapshot(s)".

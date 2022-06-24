@@ -16,10 +16,9 @@ sed -i '/[ -f ".zsh_dux_environmentd" ] && source .zsh_dux_environmentd/d' "/hom
 # kconfig: for kwriteconfig5
 pacman -S --noconfirm --ask=4 --asdeps kconfig plasma-meta
 
-_move2bkup "/etc/sddm.conf.d/kde_settings.conf"
 _setup_sddm() {
 	mkdir -p "/etc/sddm.conf.d/"
-	cp "${cp_flags}" "${GIT_DIR}/files${SDDM_CONF}" "/etc/sddm.conf.d/"
+	\cp "${cp_flags}" "${GIT_DIR}/files${SDDM_CONF}" "/etc/sddm.conf.d/"
 
 	if [[ "${sddm_autologin}" -eq 1 ]]; then
 		kwriteconfig5 --file "${SDDM_CONF}" --group "Autologin" --key "Session" "${sddm_autologin_session_type}"
@@ -54,8 +53,7 @@ _setup_sddm
 sudo -H -u "${WHICH_USER}" kwriteconfig5 --file /home/"${WHICH_USER}"/.config/ktimezonedrc --group "TimeZones" --key "LocalZone" "${system_timezone}"
 
 # Tell NetworkManager to use iwd by default for increased WiFi reliability and speed.
-_move2bkup "/etc/NetworkManager/conf.d/wifi_backend.conf" &&
-	cp "${cp_flags}" "${GIT_DIR}/files/etc/NetworkManager/conf.d/wifi_backend.conf" "/etc/NetworkManager/conf.d/"
+\cp "${cp_flags}" "${GIT_DIR}/files/etc/NetworkManager/conf.d/wifi_backend.conf" "/etc/NetworkManager/conf.d/"
 # KDE Plasma's network applet won't work without this.
 SERVICES+="NetworkManager.service "
 # These conflict with NetworkManager.

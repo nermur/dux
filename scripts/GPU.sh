@@ -18,17 +18,13 @@ PKGS+="lib32-mesa lib32-ocl-icd lib32-vulkan-icd-loader mesa ocl-icd vulkan-icd-
 _amd_setup() {
 	PKGS+="libva-mesa-driver mesa-vdpau libva-vdpau-driver \
 	lib32-libva-mesa-driver lib32-mesa-vdpau lib32-libva-vdpau-driver "
-	_move2bkup "/etc/modprobe.d/amdgpu.conf" &&
-		cp "${cp_flags}" "${GIT_DIR}"/files/etc/modprobe.d/amdgpu.conf "/etc/modprobe.d/"
+	\cp "${cp_flags}" "${GIT_DIR}"/files/etc/modprobe.d/amdgpu.conf "/etc/modprobe.d/"
 
-	_move2bkup "/etc/modprobe.d/radeon.conf" &&
-		cp "${cp_flags}" "${GIT_DIR}"/files/etc/modprobe.d/radeon.conf "/etc/modprobe.d/"
+	\cp "${cp_flags}" "${GIT_DIR}"/files/etc/modprobe.d/radeon.conf "/etc/modprobe.d/"
 
 	if [[ ${amd_graphics_force_radeon} -eq 1 ]]; then
-		_move2bkup "/etc/modprobe.d/amdgpu.conf"
 		echo "MODULES+=(radeon)" >>/etc/mkinitcpio.conf
 	else
-		_move2bkup "/etc/modprobe.d/radeon.conf"
 		echo "MODULES+=(amdgpu)" >>/etc/mkinitcpio.conf
 		_amd_graphics_sysfs() {
 			if [[ ${amd_graphics_sysfs} -eq 1 ]]; then

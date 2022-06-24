@@ -15,9 +15,9 @@ MARCH=$(gcc -march=native -Q --help=target | grep -oP '(?<=-march=).*' -m1 | awk
 ROOT_DISK=$(lsblk -no PARTUUID,NAME | grep -B1 "luks-*" | head -1 | cut -f1 -d' ')
 
 if [[ ! -d "/sys/firmware/efi" ]]; then
-    GET_PART=$(df /boot | grep /dev | cut -f1 -d' ')
+    GET_PART=$(\df /boot | grep /dev | cut -f1 -d' ')
 else
-    GET_PART=$(df /boot/efi | grep /dev | cut -f1 -d' ')
+    GET_PART=$(\df /boot/efi | grep /dev | cut -f1 -d' ')
 fi
 BOOT_PART=$(lsblk -no PARTUUID ${GET_PART})
 
@@ -136,11 +136,9 @@ _bootloader_setup() {
             refind-install
             # Tell rEFInd to detect the initramfs for linux-lts & linux automatically.
             sed -i '/^#extra_kernel_version_strings/s/^#//' /boot/EFI/refind/refind.conf
-            _move2bkup "/etc/pacman.d/hooks/refind.hook" &&
-                cp "${cp_flags}" "${GIT_DIR}"/files/etc/pacman.d/hooks/refind.hook "/etc/pacman.d/hooks/"
+            \cp "${cp_flags}" "${GIT_DIR}"/files/etc/pacman.d/hooks/refind.hook "/etc/pacman.d/hooks/"
         }
         _refind_bootloader_config() {
-            _move2bkup "${BOOT_CONF}"
             cat <<EOF >"${BOOT_CONF}"
 "Boot using standard options"  "${MITIGATIONS_OFF:-} ${REQUIRED_PARAMS} ${COMMON_PARAMS}"
 
@@ -151,9 +149,6 @@ EOF
         }
         _setup_refind_bootloader
         _refind_bootloader_config
-
-        _move2bkup "/usr/share/libalpm/scripts/grub-mkconfig"
-        _move2bkup "/etc/pacman.d/hooks/zz_snap-pac-grub-post.hook"
     fi
 }
 
@@ -170,12 +165,10 @@ _config_networkmanager() {
     local DIR="etc/NetworkManager/conf.d"
 
     # Use openresolv instead of systemd-resolvconf.
-    _move2bkup "/${DIR}/rc-manager.conf" &&
-        cp "${cp_flags}" "${GIT_DIR}"/files/"${DIR}"/rc-manager.conf "/${DIR}/"
+    \cp "${cp_flags}" "${GIT_DIR}"/files/"${DIR}"/rc-manager.conf "/${DIR}/"
 
     # Use dnsmasq instead of systemd-resolved.
-    _move2bkup "/${DIR}/dns.conf" &&
-        cp "${cp_flags}" "${GIT_DIR}"/files/"${DIR}"/dns.conf "/${DIR}/"
+    \cp "${cp_flags}" "${GIT_DIR}"/files/"${DIR}"/dns.conf "/${DIR}/"
 }
 
 _system_configuration() {
@@ -204,8 +197,7 @@ _system_configuration() {
         /etc/systemd/{system.conf,user.conf}
 
     # Root-less Xorg to lower its memory usage and increase overall security.
-    _move2bkup "/etc/X11/Xwrapper.config" &&
-        cp "${cp_flags}" "${GIT_DIR}"/files/etc/X11/Xwrapper.config "/etc/X11/"
+    \cp "${cp_flags}" "${GIT_DIR}"/files/etc/X11/Xwrapper.config "/etc/X11/"
 
     if ! grep -q 'PRUNENAMES = ".snapshots"' /etc/updatedb.conf >&/dev/null; then
         # Tells mlocate to ignore Snapper's Btrfs snapshots; avoids slowdowns and excessive memory usage.
@@ -217,29 +209,23 @@ _system_configuration() {
     ln -s /dev/null /etc/tmpfiles.d/linux-firmware.conf &>/dev/null || :
 
     # Ensure "net.ipv4.tcp_congestion_control = bbr" is a valid option.
-    _move2bkup "/etc/modules-load.d/tcp_bbr.conf" &&
-        cp "${cp_flags}" "${GIT_DIR}"/files/etc/modules-load.d/tcp_bbr.conf "/etc/modules-load.d/"
+    \cp "${cp_flags}" "${GIT_DIR}"/files/etc/modules-load.d/tcp_bbr.conf "/etc/modules-load.d/"
 
     # zRAM is a swap type that helps performance more often than not, and doesn't decrease longevity of drives.
-    _move2bkup "/etc/systemd/zram-generator.conf" &&
-        cp "${cp_flags}" "${GIT_DIR}"/files/etc/systemd/zram-generator.conf "/etc/systemd/" &&
+    \cp "${cp_flags}" "${GIT_DIR}"/files/etc/systemd/zram-generator.conf "/etc/systemd/" &&
         sed -i "s/max-zram-size = ~post_chroot.sh~/max-zram-size = ${TOTAL_RAM}/" /etc/systemd/zram-generator.conf
 
     # Configures some kernel parameters; also contains memory management settings specific to zRAM.
-    _move2bkup "/etc/sysctl.d/99-custom.conf" &&
-        cp "${cp_flags}" "${GIT_DIR}"/files/etc/sysctl.d/99-custom.conf "/etc/sysctl.d/"
+    \cp "${cp_flags}" "${GIT_DIR}"/files/etc/sysctl.d/99-custom.conf "/etc/sysctl.d/"
 
     # Use overall best I/O scheduler for each drive type (NVMe, SSD, HDD).
-    _move2bkup "/etc/udev/rules.d/60-io-schedulers.rules" &&
-        cp "${cp_flags}" "${GIT_DIR}"/files/etc/udev/rules.d/60-io-schedulers.rules "/etc/udev/rules.d/"
+    \cp "${cp_flags}" "${GIT_DIR}"/files/etc/udev/rules.d/60-io-schedulers.rules "/etc/udev/rules.d/"
 
     # https://wiki.archlinux.org/title/zsh#On-demand_rehash
-    _move2bkup "/etc/pacman.d/hooks/zsh.hook" &&
-        cp "${cp_flags}" "${GIT_DIR}"/files/etc/pacman.d/hooks/zsh.hook "/etc/pacman.d/hooks/"
+    \cp "${cp_flags}" "${GIT_DIR}"/files/etc/pacman.d/hooks/zsh.hook "/etc/pacman.d/hooks/"
 
     # Flatpak requires this for "--filesystem=xdg-config/fontconfig:ro"
-    _move2bkup "/etc/fonts/local.conf" &&
-        cp "${cp_flags}" "${GIT_DIR}"/files/etc/fonts/local.conf "/etc/fonts/"
+    \cp "${cp_flags}" "${GIT_DIR}"/files/etc/fonts/local.conf "/etc/fonts/"
 
     # Makes our font and cursor settings work inside Flatpak.
     FLATPAK_PARAMS="--filesystem=xdg-config/fontconfig:ro --filesystem=/home/${WHICH_USER}/.icons/:ro --filesystem=/home/${WHICH_USER}/.local/share/icons/:ro --filesystem=/usr/share/icons/:ro"

@@ -10,8 +10,7 @@ source "${GIT_DIR}/configs/settings.sh"
 GDM_CONF="/etc/gdm/custom.conf"
 
 _setup_gdm() {
-	_move2bkup "${GDM_CONF}" &&
-		cp "${cp_flags}" "${GIT_DIR}"/files/etc/gdm/custom.conf "/etc/gdm/"
+	\cp "${cp_flags}" "${GIT_DIR}"/files/etc/gdm/custom.conf "/etc/gdm/"
 
 	sed -i "s/AutomaticLogin=~GNOME.sh~/AutomaticLogin=${WHICH_USER}/" "${GDM_CONF}"
 
@@ -39,8 +38,7 @@ _setup_gdm
 _pkgs_add
 
 # Tell NetworkManager to use iwd by default for increased WiFi reliability and speed.
-_move2bkup "/etc/NetworkManager/conf.d/wifi_backend.conf" &&
-	cp "${cp_flags}" "${GIT_DIR}/files/etc/NetworkManager/conf.d/wifi_backend.conf" "/etc/NetworkManager/conf.d/"
+\cp "${cp_flags}" "${GIT_DIR}/files/etc/NetworkManager/conf.d/wifi_backend.conf" "/etc/NetworkManager/conf.d/"
 SERVICES+="NetworkManager.service "
 systemctl disable connman.service systemd-networkd.service iwd.service >&/dev/null || :
 

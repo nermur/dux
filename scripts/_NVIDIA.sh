@@ -9,9 +9,7 @@ source "${GIT_DIR}/configs/settings.sh"
 
 _nouveau_setup() {
 	PKGS+="xf86-video-nouveau "
-	_move2bkup "/etc/modprobe.d/nvidia.conf"
-	_move2bkup "/etc/modprobe.d/nouveau.conf" &&
-		cp "${cp_flags}" "${GIT_DIR}"/files/etc/modprobe.d/nouveau.conf "/etc/modprobe.d/"
+	\cp "${cp_flags}" "${GIT_DIR}"/files/etc/modprobe.d/nouveau.conf "/etc/modprobe.d/"
 
 	_nouveau_reclocking() {
 		# Kernel parameter only; reclocking later (say, after graphical.target) is likely to crash the GPU.
@@ -42,8 +40,7 @@ _nouveau_setup() {
 
 _nvidia_setup() {
 	PKGS+="xorg-server-devel nvidia-prime "
-	_move2bkup "/etc/modprobe.d/nvidia.conf" &&
-		cp "${cp_flags}" "${GIT_DIR}"/files/etc/modprobe.d/nvidia.conf "/etc/modprobe.d/"
+	\cp "${cp_flags}" "${GIT_DIR}"/files/etc/modprobe.d/nvidia.conf "/etc/modprobe.d/"
 
 	[[ ${nvidia_force_pcie_gen2} -eq 1 ]] &&
 		sed -i "s/NVreg_EnablePCIeGen3=1/NVreg_EnablePCIeGen3=0/" /etc/modprobe.d/nvidia.conf

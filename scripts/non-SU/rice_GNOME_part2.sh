@@ -9,30 +9,27 @@ source "${GIT_DIR}/scripts/GLOBAL_IMPORTS.sh"
 source "${GIT_DIR}/configs/settings.sh"
 
 if [[ ${IS_CHROOT} -eq 1 ]]; then
-    echo -e "\nERROR: Do not run this script inside a chroot!\n"
+	echo -e "\nERROR: Do not run this script inside a chroot!\n"
 	exit 1
 fi
 
 _set_configs() {
-	_move2bkup /home/"${WHICH_USER}"/.gtkrc-2.0
-	_move2bkup /home/"${WHICH_USER}"/.config/{environment.d,gtk-3.0,gtk-4.0,Kvantum,qt5ct,qt6ct} &&
-		mkdir "${mkdir_flags}" /home/"${WHICH_USER}"/.config/{environment.d,gtk-3.0,gtk-4.0,Kvantum,qt5ct,qt6ct}
+	mkdir "${mkdir_flags}" /home/"${WHICH_USER}"/.config/{environment.d,gtk-3.0,gtk-4.0,Kvantum,qt5ct,qt6ct}
 
-	cp "${cp_flags}" "${GIT_DIR}"/files/home/.gtkrc-2.0 "/home/${WHICH_USER}/"
-	cp "${cp_flags}" "${GIT_DIR}"/files/home/.config/environment.d/gnome.conf "/home/${WHICH_USER}/.config/environment.d/"
-	cp "${cp_flags}" "${GIT_DIR}"/files/home/.config/qt5ct/qt5ct.conf "/home/${WHICH_USER}/.config/qt5ct/"
-	cp "${cp_flags}" "${GIT_DIR}"/files/home/.config/qt6ct/qt6ct.conf "/home/${WHICH_USER}/.config/qt6ct/"
+	\cp "${cp_flags}" "${GIT_DIR}"/files/home/.gtkrc-2.0 "/home/${WHICH_USER}/"
+	\cp "${cp_flags}" "${GIT_DIR}"/files/home/.config/environment.d/gnome.conf "/home/${WHICH_USER}/.config/environment.d/"
+	\cp "${cp_flags}" "${GIT_DIR}"/files/home/.config/qt5ct/qt5ct.conf "/home/${WHICH_USER}/.config/qt5ct/"
+	\cp "${cp_flags}" "${GIT_DIR}"/files/home/.config/qt6ct/qt6ct.conf "/home/${WHICH_USER}/.config/qt6ct/"
 
-	cp "${cp_flags}" -R "${GIT_DIR}"/files/home/.config/gtk-3.0 "/home/${WHICH_USER}/.config"
-	cp "${cp_flags}" -R "${GIT_DIR}"/files/home/.config/gtk-4.0 "/home/${WHICH_USER}/.config"
+	\cp "${cp_flags}" -R "${GIT_DIR}"/files/home/.config/gtk-3.0 "/home/${WHICH_USER}/.config"
+	\cp "${cp_flags}" -R "${GIT_DIR}"/files/home/.config/gtk-4.0 "/home/${WHICH_USER}/.config"
 
 	kwriteconfig5 --file /home/"${WHICH_USER}"/.config/Kvantum/kvantum.kvconfig --group "General" --key "theme" "KvGnomeDark"
 
 	kwriteconfig5 --file /home/"${WHICH_USER}"/.config/konsolerc --group "UiSettings" --key "ColorScheme" "KvGnomeDark"
 	kwriteconfig5 --file /home/"${WHICH_USER}"/.config/konsolerc --group "UiSettings" --key "WindowColorScheme" "KvGnomeDark"
 
-	_move2bkup /home/"${WHICH_USER}"/.zsh_dux_environmentd &&
-		cp "${cp_flags}" "${GIT_DIR}"/files/home/.zsh_dux_environmentd "/home/${WHICH_USER}/"
+	\cp "${cp_flags}" "${GIT_DIR}"/files/home/.zsh_dux_environmentd "/home/${WHICH_USER}/"
 	if ! grep -q '[ -f ".zsh_dux_environmentd" ] && source .zsh_dux_environmentd' "/home/${WHICH_USER}/.zprofile"; then
 		printf '\n[ -f ".zsh_dux_environmentd" ] && source .zsh_dux_environmentd' >>"/home/${WHICH_USER}/.zprofile"
 	fi

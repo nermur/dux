@@ -18,9 +18,9 @@ _base_setup() {
     mkdir -p /etc/{modprobe.d,udev/rules.d}
     mkdir -p /"${HOOK_DIR}"/{prepare/begin,started/begin,release/end}
 
-    cp "${cp_flags}" "${GIT_DIR}"/files/etc/modprobe.d/custom_kvm.conf "/etc/modprobe.d/"
-    cp "${cp_flags}" "${GIT_DIR}"/files/etc/udev/rules.d/99-qemu.rules "/etc/udev/rules.d/"
-    cp "${cp_flags}" "${GIT_DIR}"/files/etc/libvirt/hooks/qemu "/etc/libvirt/hooks"
+    \cp "${cp_flags}" "${GIT_DIR}"/files/etc/modprobe.d/custom_kvm.conf "/etc/modprobe.d/"
+    \cp "${cp_flags}" "${GIT_DIR}"/files/etc/udev/rules.d/99-qemu.rules "/etc/udev/rules.d/"
+    \cp "${cp_flags}" "${GIT_DIR}"/files/etc/libvirt/hooks/qemu "/etc/libvirt/hooks"
 
     # qemu: If using QEMU directly is desired instead of libvirt.
     # video: Virtio OpenGL acceleration.
@@ -40,7 +40,7 @@ _base_setup() {
 
 _core_isolation() {
     PKGS_AUR+="vfio-isolate "
-    cp "${cp_flags}" "${GIT_DIR}"/files/"${HOOK_DIR}"/domain/prepare/begin/core-isolation.sh "/${HOOK_DIR}/${domain_name}/prepare/begin/" &&
+    \cp "${cp_flags}" "${GIT_DIR}"/files/"${HOOK_DIR}"/domain/prepare/begin/core-isolation.sh "/${HOOK_DIR}/${domain_name}/prepare/begin/" &&
         ln -f /"${HOOK_DIR}"/"${domain_name}"/prepare/begin/core-isolation.sh "/${HOOK_DIR}/${domain_name}/release/end/core-isolation.sh"
 }
 
@@ -61,7 +61,7 @@ hugetlbfs_mount = [ "/dev/hugepages2M", "/dev/hugepages1G" ]
 EOF
     fi
 
-    cp "${cp_flags}" "${GIT_DIR}"/files/"${HOOK_DIR}"/domain/prepare/begin/hugepages.sh "/${HOOK_DIR}/${domain_name}/prepare/begin/" &&
+    \cp "${cp_flags}" "${GIT_DIR}"/files/"${HOOK_DIR}"/domain/prepare/begin/hugepages.sh "/${HOOK_DIR}/${domain_name}/prepare/begin/" &&
         ln -f /"${HOOK_DIR}"/"${domain_name}"/prepare/begin/hugepages.sh "/${HOOK_DIR}/${domain_name}/release/end/hugepages.sh"
 
 }

@@ -20,8 +20,11 @@ _pkgs_add
 # Snapper refuses to create a config if this directory exists.
 btrfs property set -ts /.snapshots ro false || :
 umount -flRq /.snapshots || :
-_move2bkup {/.snapshots,/etc/conf.d/snapper,/etc/snapper/configs} &&
-    mkdir "${mkdir_flags}" /etc/snapper/configs
+
+rm -f {/.snapshots,/etc/conf.d/snapper}
+rm -rf /etc/snapper/configs
+
+mkdir "${mkdir_flags}" /etc/snapper/configs
 touch /etc/conf.d/snapper
 
 if [[ ${DEBUG} -eq 1 ]]; then
@@ -31,4 +34,4 @@ else
     snapper -q delete-config &>/dev/null || :
     snapper -q create-config / &>/dev/null
 fi
-cp "${cp_flags}" "${GIT_DIR}"/files/etc/snapper/configs/root "/etc/snapper/configs/"
+\cp "${cp_flags}" "${GIT_DIR}"/files/etc/snapper/configs/root "/etc/snapper/configs/"
