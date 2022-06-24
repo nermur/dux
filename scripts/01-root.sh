@@ -135,7 +135,7 @@ _bootloader_setup() {
             # x86_64-efi: rEFInd overrides GRUB2 without issues.
             refind-install
             # Tell rEFInd to detect the initramfs for linux-lts & linux automatically.
-            sed -i '/^#extra_kernel_version_strings/s/^#//' /boot/EFI/refind/refind.conf
+            sed -i '/^#extra_kernel_version_strings/s/^#//' /boot/efi/EFI/refind/refind.conf
             \cp "${cp_flags}" "${GIT_DIR}"/files/etc/pacman.d/hooks/refind.hook "/etc/pacman.d/hooks/"
         }
         _refind_bootloader_config() {
