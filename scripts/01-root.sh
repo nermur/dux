@@ -172,6 +172,8 @@ _config_networkmanager() {
 }
 
 _system_configuration() {
+    # gamemode: Allows for maximum performance while a specific program is running.
+    groupadd --force -g 385 gamemode
     # Why 'video': https://github.com/Hummer12007/brightnessctl/issues/63
     usermod -a -G video,gamemode "${WHICH_USER}"
 
