@@ -14,6 +14,10 @@ if [[ ${IS_CHROOT} -eq 1 ]]; then
     exit 1
 fi
 
+if hash timeshift >&/dev/null; then
+    pacman -Rdd --quiet --noconfirm --ask=4 timeshift
+fi
+
 PKGS+="snapper "
 _pkgs_add
 
