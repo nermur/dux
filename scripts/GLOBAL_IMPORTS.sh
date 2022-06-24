@@ -79,11 +79,11 @@ _move2bkup() {
 		if [[ -f ${target} ]]; then
 			local parent_dir
 			parent_dir=$(dirname "${target}")
-			mkdir "${mkdir_flags}" "${BACKUPS}/${parent_dir}"
-			mv "${mv_flags}" "${target}" "${BACKUPS}/${target}_${DATE}" || :
+			mkdir "${mkdir_flags}" "${BACKUPS}${parent_dir}"
+			mv "${mv_flags}" "${target}" "${BACKUPS}${target}_${DATE}" || :
 
 		elif [[ -d ${target} ]]; then
-			mv "${mv_flags}" "${target}" "${BACKUPS}/${target}_${DATE}" || :
+			mv "${mv_flags}" "${target}" "${BACKUPS}${target}_${DATE}" || :
 		fi
 	done
 }
