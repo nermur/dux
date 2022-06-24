@@ -21,8 +21,8 @@ _pkgs_add
 btrfs property set -ts /.snapshots ro false || :
 umount -flRq /.snapshots || :
 
-rm -f {/.snapshots,/etc/conf.d/snapper}
-rm -rf /etc/snapper/configs
+rm -f /etc/conf.d/snapper
+rm -rf {/.snapshots,/etc/snapper/configs}
 
 mkdir "${mkdir_flags}" /etc/snapper/configs
 touch /etc/conf.d/snapper
