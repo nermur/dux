@@ -27,7 +27,7 @@ NPROC=$(nproc)
 # sudo: Allow users in group 'wheel' to elevate to superuser without prompting for a password (until 03-finalize.sh).
 echo "%wheel ALL=(ALL) NOPASSWD: ALL" >/etc/sudoers.d/custom_settings
 
-mkdir "${mkdir_flags}" {/etc/{modules-load.d,NetworkManager/conf.d,modprobe.d,tmpfiles.d,pacman.d/hooks,X11,fonts,systemd/user,snapper/configs,conf.d},/boot,/home/"${WHICH_USER}"/.config/{fontconfig/conf.d,systemd/user},/usr/share/libalpm/scripts}
+mkdir "${mkdir_flags}" {/etc/{modules-load.d,NetworkManager/conf.d,modprobe.d,tmpfiles.d,pacman.d/hooks,X11,fonts,systemd/user,conf.d},/boot,/home/"${WHICH_USER}"/.config/{fontconfig/conf.d,systemd/user},/usr/share/libalpm/scripts}
 
 _package_installers() {
     if [[ ${hardware_printers_and_scanners} -eq 1 ]]; then
@@ -57,7 +57,7 @@ _package_installers() {
     kconfig ark dolphin kde-cli-tools kdegraphics-thumbnailers kimageformats qt5-imageformats ffmpegthumbs taglib openexr libjxl android-udev \
     irqbalance zram-generator power-profiles-daemon thermald dbus-broker gamemode lib32-gamemode iptables-nft \
     dnsmasq openresolv libnewt pigz pbzip2 strace usbutils avahi nss-mdns \
-    man-db man-pages pacman-contrib snapper snap-pac bat \
+    man-db man-pages pacman-contrib snap-pac bat \
     trash-cli rebuild-detector base-devel "
     _pkgs_add
 }

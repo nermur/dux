@@ -14,6 +14,9 @@ if [[ ${IS_CHROOT} -eq 1 ]]; then
     exit 1
 fi
 
+PKGS+="snapper "
+_pkgs_add
+
 # Snapper refuses to create a config if this directory exists.
 btrfs property set -ts /.snapshots ro false || :
 umount -flRq /.snapshots || :

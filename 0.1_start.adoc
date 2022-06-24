@@ -12,7 +12,7 @@ endif::[]
 === Pick an ISO
 https://manjaro.org/download/
 
-Supported by Dux: Plasma Desktop Minimal or Gnome Desktop Minimal.
+Officially supported by Dux (other flavors can be used however): Plasma Desktop Minimal or Gnome Desktop Minimal.
 
 === Cautionary tale about Windows dual-booting
 [%collapsible]
@@ -37,7 +37,7 @@ If desired, benchmark `bs=` from 2M up to 16M (increment by 2M) to reserve for f
 === Windows
 . Download and install rufus-$version.exe +
 https://github.com/pbatard/rufus/releases
-. Add the Arch ISO through Select, click Start, then write in DD Image mode.
+. Add the Manjaro ISO through Select, click Start, then write in DD Image mode.
 
 === macOS
 . Use https://github.com/balena-io/etcher/releases[balenaEtcher].
@@ -52,7 +52,7 @@ https://github.com/pbatard/rufus/releases
 `$ lsblk -o PATH,MODEL,PARTLABEL,FSTYPE,FSVER,SIZE,FSUSE%,FSAVAIL,MOUNTPOINTS`
 
 . Don't append numbers to the end of /dev/EXAMPLE +
-`# dd if=/path/to/archkbd:[TAB] of=/dev/EXAMPLE bs=8M oflag=direct status=progress`
+`# dd if=/path/to/manjarokbd:[TAB] of=/dev/EXAMPLE bs=8M oflag=direct status=progress`
 ====
 
 === OpenBSD
@@ -63,7 +63,7 @@ https://github.com/pbatard/rufus/releases
 `# disklabel -p g EXAMPLE`
 
 . Don't append numbers to the end of /dev/EXAMPLE: +
-`# dd bs=4M if=/path/to/archkbd:[TAB] of=/dev/EXAMPLE conv=sync`
+`# dd bs=4M if=/path/to/manjarokbd:[TAB] of=/dev/EXAMPLE conv=sync`
 
 ___
 Once booted into the Manjaro ISO, proceed to: +

@@ -2,10 +2,6 @@
 # shellcheck disable=SC2034,SC2249
 set -a
 
-# Controls keyboard layout.
-# by ca cf cz de dk es et fa fi fr gr hu il it lt lv mk nl no pl ro ru sg ua uk us
-system_keymap="us"
-
 # Supported printer list: https://www.openprinting.org/printers
 hardware_printers_and_scanners="1"
 
@@ -20,21 +16,6 @@ bootloader_type="2"
 # and caused a boot failure bug for Linux 5.18:
 # https://bugs.archlinux.org/task/74891?project=1&pagenum=1
 no_mitigations="1"
-
-#- Download server region selection
-#
-# North America (United States -> Canada): US,CA
-# South America (Brazil -> Mexico -> United States): BR,MX,US
-# Europe #1 (Germany -> Netherlands): DE,NL
-# Europe #2 (Sweden -> Finland -> Norway): SE,FI,NO
-# South Africa (SA -> Kenya -> India): ZA,KE,IN
-# West Asia (Israel -> Italy -> France -> Georgia): IL,IT,FR,GE
-# NE Asia (Japan -> South Korea -> Taiwan): JP,SK,TW
-# SE Asia (Singapore -> Hong Kong -> Indonesia -> Thailand): SG,HK,ID,TH
-# Oceania (Australia -> New Zealand -> New Caledonia): AU,NZ,NC
-#
-# Countries not listed here are at your own risk!
-reflector_countrylist="US,CA"
 
 # === Desktop Environment: GNOME ===
 # GNOME Display Manager
