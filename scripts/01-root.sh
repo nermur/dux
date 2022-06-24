@@ -54,12 +54,26 @@ _package_installers() {
         PKGS+="efibootmgr "
 
     PKGS+="gnome-logs dconf-editor flatpak gsettings-desktop-schemas xdg-desktop-portal xdg-desktop-portal-gtk ibus \
-    kconfig ark dolphin kde-cli-tools kdegraphics-thumbnailers kimageformats qt5-imageformats ffmpegthumbs taglib openexr libjxl android-udev \
-    irqbalance zram-generator power-profiles-daemon thermald dbus-broker gamemode lib32-gamemode iptables-nft \
-    dnsmasq openresolv libnewt pigz pbzip2 strace usbutils avahi nss-mdns \
+    kconfig \
+    irqbalance zram-generator power-profiles-daemon thermald dbus-broker gamemode lib32-gamemode \
+    libnewt pigz pbzip2 strace usbutils avahi nss-mdns \
     man-db man-pages pacman-contrib bat \
     trash-cli rebuild-detector base-devel "
     _pkgs_add
+}
+
+_config_dolphin() {
+    if hash dolphin >&/dev/null; then
+        local CONF="/home/${WHICH_USER}/.config/dolphinrc"
+        kwriteconfig5 --file "${CONF}" --group "General" --key "ShowFullPath" "true"
+        kwriteconfig5 --file "${CONF}" --group "General" --key "ShowSpaceInfo" "false"
+        kwriteconfig5 --file "/home/${WHICH_USER}/.config/kdeglobals" --group "PreviewSettings" --key "MaximumRemoteSize" "10485760"
+    fi
+
+    if hash balooctl >&/dev/null; then
+        balooctl suspend
+        balooctl disable
+    fi
 }
 
 _bootloader_setup() {
@@ -152,25 +166,6 @@ EOF
     fi
 }
 
-_config_dolphin() {
-    local CONF="/home/${WHICH_USER}/.config/dolphinrc"
-    kwriteconfig5 --file "${CONF}" --group "General" --key "ShowFullPath" "true"
-    kwriteconfig5 --file "${CONF}" --group "General" --key "ShowSpaceInfo" "false"
-    kwriteconfig5 --file "/home/${WHICH_USER}/.config/kdeglobals" --group "PreviewSettings" --key "MaximumRemoteSize" "10485760"
-    balooctl suspend
-    balooctl disable
-}
-
-_config_networkmanager() {
-    local DIR="etc/NetworkManager/conf.d"
-
-    # Use openresolv instead of systemd-resolvconf.
-    \cp "${cp_flags}" "${GIT_DIR}"/files/"${DIR}"/rc-manager.conf "/${DIR}/"
-
-    # Use dnsmasq instead of systemd-resolved.
-    \cp "${cp_flags}" "${GIT_DIR}"/files/"${DIR}"/dns.conf "/${DIR}/"
-}
-
 _system_configuration() {
     # gamemode: Allows for maximum performance while a specific program is running.
     groupadd --force -g 385 gamemode
@@ -247,7 +242,6 @@ ln -sf /dev/null /usr/share/libalpm/hooks/60-mkinitcpio-remove.hook
 ln -sf /dev/null /usr/share/libalpm/hooks/90-mkinitcpio-install.hook
 
 _config_dolphin
-_config_networkmanager
 _bootloader_setup
 _system_configuration
 

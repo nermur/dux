@@ -46,7 +46,7 @@ ttf_merriweather="1"
 # A de-duplicating file backup utility using the best backend (BorgBackup).
 vorta="1"
 
-# File manager/explorer; already installed by default.
+# File manager/explorer.
 dolphin="1"
 
 # Video player.

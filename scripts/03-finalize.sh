@@ -30,6 +30,21 @@ fi
 systemctl mask systemd-resolved.service systemd-oomd.service
 
 _cleanup() {
+    # Do network changes last, since this'll break DNS resolution until reboot.
+    PKGS+="dnsmasq openresolv iptables-nft "
+    _pkgs_add
+
+    _config_networkmanager() {
+        local DIR="etc/NetworkManager/conf.d"
+
+        # Use openresolv instead of systemd-resolvconf.
+        \cp "${cp_flags}" "${GIT_DIR}"/files/"${DIR}"/rc-manager.conf "/${DIR}/"
+
+        # Use dnsmasq instead of systemd-resolved.
+        \cp "${cp_flags}" "${GIT_DIR}"/files/"${DIR}"/dns.conf "/${DIR}/"
+    }
+    _config_networkmanager
+
     chown -R "${WHICH_USER}:${WHICH_USER}" "${GIT_DIR}"
     echo "%wheel ALL=(ALL) ALL" >/etc/sudoers.d/custom_settings
 }
