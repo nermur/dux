@@ -27,6 +27,8 @@ else
         grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
+systemctl mask systemd-resolved.service systemd-oomd.service
+
 _cleanup() {
     chown -R "${WHICH_USER}:${WHICH_USER}" "${GIT_DIR}"
     echo "%wheel ALL=(ALL) ALL" >/etc/sudoers.d/custom_settings

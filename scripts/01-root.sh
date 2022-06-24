@@ -256,8 +256,6 @@ irqbalance.service dbus-broker.service power-profiles-daemon.service thermald.se
 # shellcheck disable=SC2086
 _systemctl enable ${SERVICES}
 
-systemctl mask lvm2-lvmpolld.socket lvm2-monitor.service systemd-resolved.service systemd-oomd.service
-
 _prepare_02() {
     # Syntax errors in /etc/nsswitch.conf will break /etc/passwd, /etc/group, and /etc/hosts (breaking the whole OS until repaired).
     chattr -f +i /etc/nsswitch.conf
