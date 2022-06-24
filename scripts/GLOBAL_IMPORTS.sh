@@ -80,10 +80,10 @@ _move2bkup() {
 			local parent_dir
 			parent_dir=$(dirname "${target}")
 			mkdir "${mkdir_flags}" "${BACKUPS}${parent_dir}"
-			mv "${mv_flags}" "${target}" "${BACKUPS}${target}_${DATE}" || :
+			mv "${mv_flags}" "${target}" "${BACKUPS}${target}" || :
 
 		elif [[ -d ${target} ]]; then
-			mv "${mv_flags}" "${target}" "${BACKUPS}${target}_${DATE}" || :
+			mv "${mv_flags}" "${target}" "${BACKUPS}${target}" || :
 		fi
 	done
 }
