@@ -57,7 +57,7 @@ _package_installers() {
     kconfig ark dolphin kde-cli-tools kdegraphics-thumbnailers kimageformats qt5-imageformats ffmpegthumbs taglib openexr libjxl android-udev \
     irqbalance zram-generator power-profiles-daemon thermald dbus-broker gamemode lib32-gamemode iptables-nft \
     dnsmasq openresolv libnewt pigz pbzip2 strace usbutils avahi nss-mdns \
-    man-db man-pages pacman-contrib snap-pac bat \
+    man-db man-pages pacman-contrib bat \
     trash-cli rebuild-detector base-devel "
     _pkgs_add
 }

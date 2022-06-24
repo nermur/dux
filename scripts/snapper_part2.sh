@@ -9,6 +9,8 @@ source "${GIT_DIR}/configs/settings.sh"
 
 clear
 
+PKGS+="snap-pac "
+
 if [[ ${bootloader_type} -eq 1 ]]; then
     PKGS+="grub-btrfs "
     _pkgs_add
