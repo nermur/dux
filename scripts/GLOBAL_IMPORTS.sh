@@ -71,17 +71,19 @@ _systemctl() {
 		systemctl "$@"
 	fi
 }
+
+BACKUPS="${GIT_DIR}_backups_${DATE}" && export BACKUPS
 _move2bkup() {
 	local target
 	for target in "$@"; do
 		if [[ -f ${target} ]]; then
 			local parent_dir
 			parent_dir=$(dirname "${target}")
-			mkdir "${mkdir_flags}" ${BACKUPS}${parent_dir}
-			mv "${mv_flags}" "${target}" "${BACKUPS}${target}_${DATE}" || :
+			mkdir "${mkdir_flags}" "${BACKUPS}/${parent_dir}"
+			mv "${mv_flags}" "${target}" "${BACKUPS}/${target}_${DATE}" || :
 
 		elif [[ -d ${target} ]]; then
-			mv "${mv_flags}" "${target}" "${BACKUPS}${target}_${DATE}" || :
+			mv "${mv_flags}" "${target}" "${BACKUPS}/${target}_${DATE}" || :
 		fi
 	done
 }
