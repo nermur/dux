@@ -16,10 +16,7 @@ cd "${SCRIPT_DIR}" && GIT_DIR=$(git rev-parse --show-toplevel)
 source "${GIT_DIR}/scripts/GLOBAL_IMPORTS.sh"
 source "${GIT_DIR}/configs/settings.sh"
 
-if ! grep -q "'archiso'" /etc/mkinitcpio.d/linux.preset; then
-	echo -e "\nERROR: Do not run this script outside of the Arch Linux ISO!\n"
-	exit 1
-fi
+export DUX_INSTALLER=1
 
 mkdir -p "${GIT_DIR}/logs"
 # Makes scripts below executable.
@@ -27,22 +24,10 @@ chmod +x -R "${GIT_DIR}"
 
 clear
 
-_password_prompt() {
-	read -rp "Enter a new password for the username \"${WHICH_USER}\": " DESIREDPW
-	if [[ -z ${DESIREDPW} ]]; then
-		echo -e "\nNo password was entered, please try again.\n"
-		_password_prompt
-	fi
-
-	read -rp $'\nPlease repeat your password: ' PWCODE
-	if [[ ${DESIREDPW} == "${PWCODE}" ]]; then
-		export PWCODE
-	else
-		echo -e "\nPasswords do not match, please try again.\n"
-		_password_prompt
-	fi
+_snapper_part1() {
+    ("${GIT_DIR}/scripts/snapper_part1.sh") |& tee "${GIT_DIR}/logs/snapper_part1.log"
 }
-_password_prompt
+_snapper_part1
 
 _01() {
 	("${GIT_DIR}/scripts/01-root.sh") |& tee "${GIT_DIR}/logs/01-root.log" || return
@@ -65,31 +50,29 @@ _gpu() {
 }
 _gpu
 
-_desktop_environment() {
-	case ${desktop_environment} in
-	1)
-		("${GIT_DIR}/scripts/GNOME.sh") |& tee "${GIT_DIR}/logs/GNOME.log" || return
-		;;
-	2)
-		("${GIT_DIR}/scripts/KDE.sh") |& tee "${GIT_DIR}/logs/KDE.log" || return
-		;;
-	*)
-		printf "\nNOTICE: No desktop environment was selected.\n"
-		;;
-	esac
+if [[ ${XDG_SESSION_DESKTOP} = "GNOME" ]] && [[ ${allow_gnome_rice} -eq 1 ]]; then
+    _gnome_rice() {
+        ("${GIT_DIR}/scripts/rice_GNOME.sh") |& tee "${GIT_DIR}/logs/rice_GNOME.log"
+        (sudo -H -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/non-SU/rice_GNOME_part2.sh") |& tee "${GIT_DIR}/logs/rice_GNOME_part2.log"
+    }
+    _gnome_rice
+elif [[ ${XDG_SESSION_DESKTOP} = "KDE" ]] && [[ ${allow_kde_rice} -eq 1 ]]; then
+    _kde_rice() {
+        ("${GIT_DIR}/scripts/rice_KDE.sh") |& tee "${GIT_DIR}/logs/rice_KDE.log"
+        (sudo -H -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/non-SU/rice_KDE_part2.sh") |& tee "${GIT_DIR}/logs/rice_KDE_part2.log"
+    }
+    _kde_rice
+fi
+
+_snapper_part2() {
+    ("${GIT_DIR}/scripts/snapper_part2.sh") |& tee "${GIT_DIR}/logs/snapper_part2.log"
 }
-_desktop_environment
+_snapper_part2
 
 _03() {
 	("${GIT_DIR}/scripts/03-finalize.sh") |& tee "${GIT_DIR}/logs/03-finalize.log" || return
 }
 _03
-
-# Set correct permissions.
-_permissions() {
-	(chown -R "${WHICH_USER}:${WHICH_USER}" "${GIT_DIR}")
-}
-_permissions
 
 whiptail --yesno "A reboot is required to complete installation.\nAfter rebooting, read through 0.3_booted.adoc.\nReboot now?" 0 0 &&
 	reboot -f

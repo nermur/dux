@@ -9,12 +9,6 @@ ifdef::env-github[]
 endif::[]
 :imagesdir: imgs/
 
-== Mounting Dux installation from an Arch Linux ISO
-. `# pacman -Sy git`
-. `# git clone https://github.com/nermur/dux`
-. If use_disk_encryption="1" -> `# cryptsetup open /dev/EXAMPLE3 lukspart`
-. `# MOUNT_ONLY=1 bash ~/dux/scripts/01-pre_chroot.sh`
-
 == Pinpointing system problems
 * `# dmesg -H`
 ** Outputs the kernel ring buffer, useful for seeing what occurred at ring0 for the current boot.

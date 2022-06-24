@@ -16,13 +16,13 @@ image:vmware_IAMa3yLRr3.png[]
 . After installation is complete, restart into your new system.
 
 ___
-. `git clone https://github.com/nermur/dux`
+. `$ git clone https://github.com/nermur/dux`
 
 . Open `~/dux/configs/settings.sh` in your editor of choice, likely `vi` or `nano`
 ** NOTE: Don't remove options in Dux's configs, just disable them.
 
-. `sudo git config --global --add safe.directory ~/dux`
-. `sudo bash ~/dux/scripts/dux_installer.sh`
+. `# sudo git config --global --add safe.directory ~/dux`
+. `# sudo bash ~/dux/scripts/dux_installer.sh`
 ** Can optionally be ran with `DEBUG=1` (put before `bash`) for more verbose logs and troubleshooting.
 
 ___

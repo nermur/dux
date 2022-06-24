@@ -2,12 +2,6 @@
 # shellcheck disable=SC2034,SC2249
 set -a
 
-# Don't use any of the following: symbols, spaces, upper-case letters.
-INITIAL_USER="admin"
-
-# Don't use any of the following: symbols, spaces.
-system_hostname="arch"
-
 # Controls keyboard layout.
 # by ca cf cz de dk es et fa fi fr gr hu il it lt lv mk nl no pl ro ru sg ua uk us
 system_keymap="us"

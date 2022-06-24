@@ -35,6 +35,9 @@ if [[ ${kde_install_virtual_keyboard} -eq 1 ]]; then
 	kwriteconfig5 --file "${SDDM_CONF}" --group "General" --key "InputMethod" "qtvirtualkeyboard"
 fi
 
+[[ ${kde_use_kwinft} -eq 1 ]] &&
+	PKGS+="kwinft "
+
 PKGS+="plasma-wayland-session colord-kde kwallet-pam kwalletmanager konsole spectacle aspell aspell-en networkmanager \
 xdg-desktop-portal xdg-desktop-portal-kde \
 sddm sddm-kcm \
@@ -45,10 +48,6 @@ _pkgs_add
 # Incase GNOME was used previously.
 kwriteconfig5 --delete --file /home/"${WHICH_USER}"/.config/konsolerc --group "UiSettings" --key "ColorScheme"
 kwriteconfig5 --delete --file /home/"${WHICH_USER}"/.config/konsolerc --group "UiSettings" --key "WindowColorScheme"
-
-[[ ${kde_use_kwinft} -eq 1 ]] &&
-	PKGS_AUR+="kwinft wrapland-kwinft disman-kwinft kdisplay-kwinft "
-_pkgs_aur_add || :
 
 _setup_sddm
 

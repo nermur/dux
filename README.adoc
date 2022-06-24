@@ -60,10 +60,13 @@ NOTE: Skip to link:0.1_start.adoc[0.1_start.adoc] for installation.
 ** Disk encryption to act as an anti-theft measure with minimal performance reduction.
 
 * `zRAM`
-** Memory compression, to stop relying on a disk swap file which can be slow (heavy I/O usage) and reduce the life-span of disks.
+** Memory compression used to stop relying on a disk swap file that reduces the life-span of disks, and to avoid heavy I/O usage that would slow the system down noticeably.
 
 * `Gamemode`
 ** Allows for a process to request temporary disabling of power-saving features for extra performance, mainly used by Lutris for video games.
+
+* Rootless `Xorg` display server
+** Less memory usage and increased security; not used for NVIDIA GPUs however, as it breaks its overclocking capabilities.
 
 * `BBRv2`: A TCP congestion control for lower bufferbloat; read about its positive effects on download/upload speeds and latency link:https://archive.ph/l0zc8[here].
 ** NOTE: qdisc is left at default, rather than the CAKE qdisc being used: +

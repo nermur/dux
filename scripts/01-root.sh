@@ -24,20 +24,10 @@ BOOT_PART=$(lsblk -no PARTUUID ${GET_PART})
 # Caches result of 'nproc'
 NPROC=$(nproc)
 
-_userinfo() {
-    # gamemode: Allows for maximum performance while a specific program is running.
-    groupadd --force -g 385 gamemode
+# sudo: Allow users in group 'wheel' to elevate to superuser without prompting for a password (until 03-finalize.sh).
+echo "%wheel ALL=(ALL) NOPASSWD: ALL" >/etc/sudoers.d/custom_settings
 
-    # Why 'video': https://github.com/Hummer12007/brightnessctl/issues/63
-    useradd -m -G users,wheel,video,gamemode -s /bin/zsh "${WHICH_USER}" &&
-        echo "${WHICH_USER}:${PWCODE}" | chpasswd
-    unset PWCODE
-
-    # sudo: Allow users in group 'wheel' to elevate to superuser without prompting for a password (until 04-finalize.sh).
-    echo "%wheel ALL=(ALL) NOPASSWD: ALL" >/etc/sudoers.d/custom_settings
-
-    mkdir "${mkdir_flags}" {/etc/{modules-load.d,NetworkManager/conf.d,modprobe.d,tmpfiles.d,pacman.d/hooks,X11,fonts,systemd/user,snapper/configs,conf.d},/boot,/home/"${WHICH_USER}"/.config/{fontconfig/conf.d,systemd/user},/usr/share/libalpm/scripts}
-}
+mkdir "${mkdir_flags}" {/etc/{modules-load.d,NetworkManager/conf.d,modprobe.d,tmpfiles.d,pacman.d/hooks,X11,fonts,systemd/user,snapper/configs,conf.d},/boot,/home/"${WHICH_USER}"/.config/{fontconfig/conf.d,systemd/user},/usr/share/libalpm/scripts}
 
 _package_installers() {
     if [[ ${hardware_printers_and_scanners} -eq 1 ]]; then
@@ -68,7 +58,7 @@ _package_installers() {
     irqbalance zram-generator power-profiles-daemon thermald dbus-broker gamemode lib32-gamemode iptables-nft \
     dnsmasq openresolv libnewt pigz pbzip2 strace usbutils avahi nss-mdns \
     man-db man-pages pacman-contrib snapper snap-pac bat \
-    trash-cli rebuild-detector "
+    trash-cli rebuild-detector base-devel "
     _pkgs_add
 }
 
@@ -189,6 +179,9 @@ _config_networkmanager() {
 }
 
 _system_configuration() {
+    # Why 'video': https://github.com/Hummer12007/brightnessctl/issues/63
+    usermod -a -G video,gamemode "${WHICH_USER}"
+
     # Better output, and package downloads.
     sed -i -e 's/^#Color/Color/' \
         -e '/^#ParallelDownloads/s/^#//' \
