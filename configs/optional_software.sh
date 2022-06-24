@@ -6,7 +6,7 @@ set -a
 # An online music player that's very useful for quickly finding songs you like, for both the big and small artists.
 spotify="1"
 
-# An adblocker for Spotify Free users.
+# Disables ads for Spotify Free users.
 spotify_adblock="0"
 
 # Official Discord client with additional safety and privacy provided by Flatpak's sandboxing.
@@ -31,24 +31,14 @@ opensnitch="0"
 #   For microphones: Use "Noise Reduction" to start out with.
 easyeffects="0"
 
-# C/C++ debugging and reverse engineering: Valgrind, GDB, radere2 + ghidra (graphical interface: Cutter), pwndbg.
+# C/C++ debugging and reverse engineering: Valgrind, GDB, Rizin + ghidra (graphical interface: Cutter), pwndbg.
 cxx_toolbox="0"
-
-# The most private Chromium-based browser with a profitable business model that doesn't sacrifice your security and privacy.
-# https://privacytests.org/
-brave="1"
 
 # The overall best Microsoft Office replacement.
 onlyoffice="1"
 
-# A powerful front-end for YouTube. Open its settings to see why it's great.
-freetube="1"
-
 # A patchbay for Pipewire. Used to direct where audio transmits to and from.
 helvum="1"
-
-# Pacman GUI frontend; makes it easier to manage Arch Linux.
-octopi="1"
 
 # An excellent Serif font to use for reading.
 ttf_merriweather="1"

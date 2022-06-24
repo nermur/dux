@@ -34,11 +34,10 @@ You can expect higher quality from forking and doing this work yourself, since y
 
 * UEFI secure boot support.
 
-* Encrypted /boot support.
-
 === Indirect ways to contribute
 * Vote for these packages on the AUR, to give them a better chance of being officially packaged:
 ** https://aur.archlinux.org/packages/btrfs-assistant
 ** https://aur.archlinux.org/packages/opensnitch
 ** https://aur.archlinux.org/packages/refind-btrfs
 ** https://aur.archlinux.org/packages/vorta
+** https://aur.archlinux.org/packages/ttf-merriweather

@@ -40,9 +40,6 @@ if [[ ${opensnitch} -eq 1 ]]; then
 	SERVICES+="opensnitchd.service "
 fi
 
-[[ ${octopi} -eq 1 ]] &&
-	PKGS_AUR+="octopi "
-
 [[ ${ttf_merriweather} -eq 1 ]] &&
 	PKGS_AUR+="ttf-merriweather "
 
@@ -61,14 +58,11 @@ fi
 
 if [[ ${mpv} -eq 1 ]]; then
 	PKGS+="mpv "
-	trap 'sudo -H -u "${WHICH_USER}" bash -c "${SYSTEMD_USER_ENV} DENY_SUPERUSER=1 /home/${WHICH_USER}/dux/scripts/non-SU/software_catalog/mpv_config.sh"' EXIT
+	trap 'sudo -H -u "${WHICH_USER}" bash -c "${SYSTEMD_USER_ENV} DENY_SUPERUSER=1 ${GIT_DIR}/scripts/non-SU/software_catalog/mpv_config.sh"' EXIT
 fi
 
 [[ ${visual_studio_code} -eq 1 ]] &&
 	PKGS_AUR+="visual-studio-code-bin "
-
-[[ ${freetube} -eq 1 ]] &&
-	PKGS_AUR+="freetube-git "
 
 [[ ${onlyoffice} -eq 1 ]] &&
 	FLATPAKS+="org.onlyoffice.desktopeditors "
@@ -89,11 +83,6 @@ if [[ ${obs_studio} -eq 1 ]]; then
 	}
 fi
 
-if [[ ${brave} -eq 1 ]]; then
-	PKGS+="libgnome-keyring libnotify "
-	PKGS_AUR+="brave-bin "
-fi
-
 [[ ${foliate} -eq 1 ]] &&
 	PKGS+="foliate "
 
@@ -106,7 +95,7 @@ if [[ ${nomacs} -eq 1 ]]; then
 		mkdir -p "/home/${WHICH_USER}/.config/nomacs"
 		local CONF="/home/${WHICH_USER}/.config/nomacs/Image Lounge.conf"
 		kwriteconfig5 --file "${CONF}" --group "DisplaySettings" --key "themeName312" "System.css"
-		if [[ ${desktop_environment} -eq 1 ]] && [[ ${allow_gnome_rice} -eq 1 ]] || [[ ${desktop_environment} -eq 2 ]] && [[ ${allow_kde_rice} -eq 1 ]]; then
+		if [[ ${allow_gnome_rice} -eq 1 ]] || [[ ${allow_kde_rice} -eq 1 ]]; then
 			kwriteconfig5 --file "${CONF}" --group "DisplaySettings" --key "defaultIconColor" "false"
 			kwriteconfig5 --file "${CONF}" --group "DisplaySettings" --key "iconColorRGBA" "4294967295"
 		fi

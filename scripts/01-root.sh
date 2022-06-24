@@ -15,9 +15,9 @@ MARCH=$(gcc -march=native -Q --help=target | grep -oP '(?<=-march=).*' -m1 | awk
 ROOT_DISK=$(lsblk -no PARTUUID,NAME | grep -B1 "luks-*" | head -1 | cut -f1 -d' ')
 
 if [[ ! -d "/sys/firmware/efi" ]]; then
-    GET_PART=$(df /boot)
+    GET_PART=$(df /boot | grep /dev | cut -f1 -d' ')
 else
-    GET_PART=$(df /boot/efi)
+    GET_PART=$(df /boot/efi | grep /dev | cut -f1 -d' ')
 fi
 BOOT_PART=$(lsblk -no PARTUUID ${GET_PART})
 
