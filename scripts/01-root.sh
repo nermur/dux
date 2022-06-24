@@ -238,7 +238,6 @@ _system_configuration() {
     fi
 }
 
-_userinfo
 _package_installers
 
 # This'll prevent many unnecessary initramfs generations, speeding up the install process drastically.

@@ -30,9 +30,7 @@ _snapper_part1() {
 _snapper_part1
 
 # Make a backup of the system now before touching anything else.
-_create_snapshot(){
-	snapper create -t single -d "Before Dux installation"
-}
+snapper create -t single -d "Before Dux installation"
 
 _01() {
 	("${GIT_DIR}/scripts/01-root.sh") |& tee "${GIT_DIR}/logs/01-root.log" || return
