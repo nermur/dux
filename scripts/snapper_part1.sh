@@ -17,21 +17,9 @@ fi
 PKGS+="snapper "
 _pkgs_add
 
-# Snapper refuses to create a config if this directory exists.
-btrfs property set -ts /.snapshots ro false || :
-umount -flRq /.snapshots || :
-
-rm -f /etc/conf.d/snapper
-rm -rf {/.snapshots,/etc/snapper/configs}
-
-mkdir "${mkdir_flags}" /etc/snapper/configs
-touch /etc/conf.d/snapper
-
 if [[ ${DEBUG} -eq 1 ]]; then
-    snapper delete-config || :
-    snapper create-config /
+    snapper create-config / || :
 else
-    snapper -q delete-config &>/dev/null || :
-    snapper -q create-config / &>/dev/null
+    snapper -q create-config / &>/dev/null || :
 fi
 \cp "${cp_flags}" "${GIT_DIR}"/files/etc/snapper/configs/root "/etc/snapper/configs/"
