@@ -83,6 +83,7 @@ _snapper_part2
 
 _03() {
     ("${GIT_DIR}/scripts/03-finalize.sh") |& tee "${GIT_DIR}/logs/03-finalize.log" || return
+    _repair_mkinitcpio(){}
 }
 _03
 
