@@ -34,6 +34,10 @@ elif [[ ${bootloader_type} -eq 2 ]]; then
 	BOOT_CONF="/boot/refind_linux.conf" && export BOOT_CONF
 fi
 
+[[ -z ${FONT_SELECTION:-} ]] &&
+	FONT_SELECTION="noto-fonts noto-fonts-cjk noto-fonts-emoji ttf-hack ttf-liberation ttf-carlito ttf-caladea" &&
+	export FONT_SELECTION
+
 [[ -z ${SYSTEMD_USER_ENV:-} ]] &&
 	SYSTEMD_USER_ENV="DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus XDG_RUNTIME_DIR=/run/user/1000" &&
 	export SYSTEMD_USER_ENV

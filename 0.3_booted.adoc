@@ -20,6 +20,11 @@ endif::[]
 ** `$ paru -Syu`: Update all non-AUR and AUR packages
 ** `# pacman -Syu`: Update all non-AUR packages
 
+* [UEFI only] If you installed rEFInd bootloader and wish to uninstall GRUB:
+** `# efibootmgr --delete-bootnum -b $(efibootmgr | grep Manjaro | grep -Eo "[0-9]{1,4}")`
+** `# pacman -Rnsc grub`
+** `# rm -rf /boot/{grub,efi/EFI/Manjaro,efi/EFI/boot}`
+
 == Graphical environments
 NOTE: Win/Super/kbd:[Meta]/Mod4 are the same key, it's usually between kbd:[LCtrl] and kbd:[LAlt].
 

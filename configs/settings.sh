@@ -61,7 +61,7 @@ kde_install_virtual_keyboard="0"
 # Try this only if KDE seems buggy.
 kde_use_kwinft="0"
 
-# Care was taken to ensure this doesn't break anything.
+# As with GNOME, care was taken to ensure this doesn't break anything.
 allow_kde_rice="1"
 
 if [[ ${allow_kde_rice} -eq 1 ]]; then

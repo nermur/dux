@@ -13,6 +13,9 @@ if [[ ${IS_CHROOT} -eq 1 ]]; then
 	exit 1
 fi
 
+# Generate font cache so new fonts work correctly.
+fc-cache -f
+
 _set_configs() {
 	mkdir "${mkdir_flags}" /home/"${WHICH_USER}"/.config/{environment.d,gtk-3.0,gtk-4.0,Kvantum,qt5ct,qt6ct}
 

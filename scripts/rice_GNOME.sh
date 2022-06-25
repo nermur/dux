@@ -19,7 +19,7 @@ _gnome_flatpak() {
 	flatpak override --env=QT_STYLE_OVERRIDE=kvantum --filesystem=xdg-config/Kvantum:ro
 }
 
-PKGS+="kvantum qt6-svg qt5ct qt6ct papirus-icon-theme "
+PKGS+="kvantum qt6-svg qt5ct qt6ct papirus-icon-theme ${FONT_SELECTION} "
 
 [[ ${gnome_extension_appindicator} -eq 1 ]] &&
 	PKGS+="lib32-libappindicator-gtk2 lib32-libappindicator-gtk3 libappindicator-gtk2 libappindicator-gtk3 gnome-shell-extension-appindicator "

@@ -12,7 +12,7 @@ if [[ ${IS_CHROOT} -eq 1 ]]; then
 	exit 1
 fi
 
-PKGS+="kvantum qt6-svg papirus-icon-theme "
+PKGS+="kvantum qt6-svg papirus-icon-theme ${FONT_SELECTION} "
 PKGS_AUR+="papirus-folders-git "
 _pkgs_add
 _pkgs_aur_add

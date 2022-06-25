@@ -12,6 +12,9 @@ if [[ ${IS_CHROOT} -eq 1 ]]; then
 	exit 1
 fi
 
+# Generate font cache so new fonts work correctly.
+fc-cache -f
+
 kwriteconfig5 --group "General" --key "XftAntialias" "true"
 kwriteconfig5 --group "General" --key "XftHintStyle" "${kde_font_hinting}"
 kwriteconfig5 --group "General" --key "XftSubPixel" "${kde_font_aliasing}"

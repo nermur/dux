@@ -8,7 +8,7 @@ domain_name="win10"
 if core_isolation="1"; then
     # C0-C15: For Intel i7-12700k P-cores.
     VM_CORES="C0-C15"
-    # Cores you want the (Arch Linux/Dux) host to keep.
+    # Cores you want the (Manjaro Linux) host to keep.
     HOST_CORES="C16-C19"
 fi
 
