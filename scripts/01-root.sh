@@ -51,9 +51,6 @@ _package_installers() {
     [[ ${hardware_fingerprint_reader} -eq 1 ]] &&
         PKGS+="fprintd imagemagick "
 
-    [[ ${hardware_wifi_and_bluetooth} -eq 1 ]] &&
-        PKGS+="iwd bluez bluez-utils "
-
     [[ ${bootloader_type} -eq 2 ]] &&
         PKGS+="refind "
     [[ -d "/sys/firmware/efi" ]] &&
@@ -61,6 +58,7 @@ _package_installers() {
 
     PKGS+="gnome-logs dconf-editor flatpak gsettings-desktop-schemas xdg-desktop-portal xdg-desktop-portal-gtk ibus \
     kconfig \
+    iwd bluez bluez-utils \
     irqbalance zram-generator power-profiles-daemon thermald dbus-broker gamemode lib32-gamemode \
     libnewt pigz pbzip2 strace usbutils avahi nss-mdns \
     man-db man-pages pacman-contrib bat \
@@ -229,6 +227,9 @@ _system_configuration() {
 
     # Flatpak requires this for "--filesystem=xdg-config/fontconfig:ro"
     \cp "${cp_flags}" "${GIT_DIR}"/files/etc/fonts/local.conf "/etc/fonts/"
+
+    # Tell NetworkManager to use iwd by default for increased WiFi reliability and speed.
+    \cp "${cp_flags}" "${GIT_DIR}/files/etc/NetworkManager/conf.d/wifi_backend.conf" "/etc/NetworkManager/conf.d/"
 
     # Makes our font and cursor settings work inside Flatpak.
     FLATPAK_PARAMS="--filesystem=xdg-config/fontconfig:ro --filesystem=/home/${WHICH_USER}/.icons/:ro --filesystem=/home/${WHICH_USER}/.local/share/icons/:ro --filesystem=/usr/share/icons/:ro"

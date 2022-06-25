@@ -37,8 +37,6 @@ konsole kconfig seahorse aspell aspell-en "
 _setup_gdm
 _pkgs_add
 
-# Tell NetworkManager to use iwd by default for increased WiFi reliability and speed.
-\cp "${cp_flags}" "${GIT_DIR}/files/etc/NetworkManager/conf.d/wifi_backend.conf" "/etc/NetworkManager/conf.d/"
 SERVICES+="NetworkManager.service "
 systemctl disable connman.service systemd-networkd.service iwd.service >&/dev/null || :
 
