@@ -75,8 +75,5 @@ gsettings set org.gnome.shell enabled-extensions "['appindicatorsupport@rgcjonas
 [[ ${gnome_extension_no_titlebars} -eq 1 ]] &&
 	dconf write /org/gnome/shell/extensions/gtktitlebar/hide-window-titlebars "'always'"
 
-# Required for ~/.config/environment.d/gnome.conf to take effect without rebooting.
-_logout() {
+whiptail --yesno "Logging out is required to complete the rice.\nLogout now?" 0 0 &&
 	loginctl kill-user "${WHICH_USER}"
-}
-trap _logout EXIT

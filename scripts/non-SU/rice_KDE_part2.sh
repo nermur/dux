@@ -9,7 +9,7 @@ source "${GIT_DIR}/configs/settings.sh"
 
 if [[ ${IS_CHROOT} -eq 1 ]]; then
     echo -e "\nERROR: Do not run this script inside a chroot!\n"
-	exit 1
+    exit 1
 fi
 
 # Generate font cache so new fonts work correctly.
@@ -73,5 +73,5 @@ _other_customizations() {
 }
 _other_customizations
 
-# Logout to apply changes now.
-loginctl kill-user "${WHICH_USER}"
+whiptail --yesno "Logging out is required to complete the rice.\nLogout now?" 0 0 &&
+    loginctl kill-user "${WHICH_USER}"
