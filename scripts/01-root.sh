@@ -13,9 +13,9 @@ CPU_VENDOR=$(grep -m1 'vendor' /proc/cpuinfo | cut -f2 -d' ')
 MARCH=$(gcc -march=native -Q --help=target | grep -oP '(?<=-march=).*' -m1 | awk '{$1=$1};1')
 
 ROOT_PART=$(lsblk -no PARTUUID,NAME | grep -B1 "luks-*" | head -1 | cut -f1 -d' ')
-if [[ -z ${ROOT_PART} ]]; then
+if [[ -n ${ROOT_PART} ]]; then
     export DISK_ENCRYPTED=1
-elif [[ -n ${ROOT_PART} ]]; then
+elif [[ -z ${ROOT_PART} ]]; then
     GET_ROOT=$(\df /var | grep /dev | cut -f1 -d' ')
     ROOT_PART=$(lsblk -no PARTUUID "${GET_ROOT}")
 fi
@@ -117,9 +117,9 @@ _bootloader_setup() {
         MITIGATIONS_OFF="ibt=off mitigations=off"
 
     if [[ ${DISK_ENCRYPTED} -eq 1 ]]; then
-        REQUIRED_PARAMS="rd.luks.name=${ROOT_PART}=lukspart rd.luks.options=discard root=/dev/mapper/lukspart rootflags=subvol=@root rw"
+        REQUIRED_PARAMS="rd.luks.name=${ROOT_PART}=dux rd.luks.options=discard root=/dev/mapper/dux rootflags=subvol=@ rw"
     else
-        REQUIRED_PARAMS="root=/dev/disk/by-partuuid/${ROOT_PART} rootflags=subvol=@root rw"
+        REQUIRED_PARAMS="root=/dev/disk/by-partuuid/${ROOT_PART} rootflags=subvol=@ rw"
     fi
 
     # https://access.redhat.com/sites/default/files/attachments/201501-perf-brief-low-latency-tuning-rhel7-v1.1.pdf
@@ -241,12 +241,11 @@ _system_configuration() {
     fi
 }
 
-_package_installers
-
-# This'll prevent many unnecessary initramfs generations, speeding up the install process drastically.
+# Prevents many unnecessary initramfs generations, speeding up the install process drastically.
 ln -sf /dev/null /usr/share/libalpm/hooks/60-mkinitcpio-remove.hook
 ln -sf /dev/null /usr/share/libalpm/hooks/90-mkinitcpio-install.hook
 
+_package_installers
 _config_dolphin
 _bootloader_setup
 _system_configuration
