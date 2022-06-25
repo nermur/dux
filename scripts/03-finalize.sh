@@ -11,7 +11,7 @@ source "${GIT_DIR}/configs/settings.sh"
 clear
 
 # Now is the right time to generate a initramfs.
-pacman -S --quiet --noconfirm --ask=4 --overwrite="*" mkinitcpio
+pacman -S --quiet --noconfirm --ask=4 --overwrite="*" mkinitcpio "linux$(uname -r | awk -F. '{print $1$2}')-headers"
 
 mkinitcpio -P
 
