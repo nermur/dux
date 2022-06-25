@@ -118,6 +118,26 @@ if [[ ${DENY_SUPERUSER:-} -ne 1 && $(id -u) -eq 0 ]]; then
 			# Using arrays[@] instead of strings to "fix" shellcheck's SC2086 reduces performance needlessly, as word splitting isn't an issue for both Pacman and Paru
 			pacman -Syu --quiet --noconfirm --ask=4 --needed ${PKGS}
 	}
+	_is_pkgs_installed() {
+		if [[ -n ${REMOVE_PKGS} ]]; then
+			pacman -Qq "${REMOVE_PKGS[@]}" | sed '/error/d' >>/tmp/tested_pkgs
+			TESTED_PKGS=$(</tmp/tested_pkgs) # removes trailing newlines
+		fi
+	}
+	_remove_installed_pkgs() {
+		_is_pkgs_installed
+		if [[ -n ${TESTED_PKGS} ]]; then
+			pacman -Rsn --noconfirm ${TESTED_PKGS}
+			rm -f /tmp/tested_pkgs
+		fi
+	}
+	_force_remove_installed_pkgs() {
+		_is_pkgs_installed
+		if [[ -n ${TESTED_PKGS} ]]; then
+			pacman -Rsndd --noconfirm ${TESTED_PKGS}
+			rm -f /tmp/tested_pkgs
+		fi
+	}
 	_modify_kernel_parameters() {
 		if ! grep -q "${PARAMS}" "${BOOT_CONF}"; then
 			if [[ ${bootloader_type} -eq 1 ]]; then

@@ -6,7 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${SCRIPT_DIR}" && GIT_DIR=$(git rev-parse --show-toplevel)
 source "${GIT_DIR}/scripts/GLOBAL_IMPORTS.sh"
 
-PKGS+="alsa-firmware sof-firmware alsa-ucm-conf \
+PKGS+="manjaro-pipewire alsa-firmware sof-firmware alsa-ucm-conf \
 pipewire wireplumber pipewire-alsa pipewire-pulse pipewire-jack pipewire-zeroconf pipewire-v4l2 \
 lib32-pipewire lib32-pipewire-jack gst-plugin-pipewire \
 libpulse lib32-libpulse alsa-plugins lib32-alsa-plugins alsa-lib lib32-alsa-lib "
