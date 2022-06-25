@@ -56,9 +56,6 @@ NOTE: Skip to link:0.1_start.adoc[0.1_start.adoc] for installation.
 * Sharp and clear font rendering for low-DPI and high-DPI displays to emphasize readability.
 ** Websites or software that use Microsoft's fonts also look as intended.
 
-* `LUKS2`
-** Disk encryption to act as an anti-theft measure with minimal performance reduction.
-
 * `zRAM`
 ** Memory compression used to stop relying on a disk swap file that reduces the life-span of disks, and to avoid heavy I/O usage that would slow the system down noticeably.
 

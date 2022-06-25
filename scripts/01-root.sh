@@ -12,14 +12,20 @@ CPU_VENDOR=$(grep -m1 'vendor' /proc/cpuinfo | cut -f2 -d' ')
 # Also covers GCC's -mtune
 MARCH=$(gcc -march=native -Q --help=target | grep -oP '(?<=-march=).*' -m1 | awk '{$1=$1};1')
 
-ROOT_DISK=$(lsblk -no PARTUUID,NAME | grep -B1 "luks-*" | head -1 | cut -f1 -d' ')
+ROOT_PART=$(lsblk -no PARTUUID,NAME | grep -B1 "luks-*" | head -1 | cut -f1 -d' ')
+if [[ -z ${ROOT_PART} ]]; then
+    export DISK_ENCRYPTED=1
+elif [[ -n ${ROOT_PART} ]]; then
+    GET_ROOT=$(\df /var | grep /dev | cut -f1 -d' ')
+    ROOT_PART=$(lsblk -no PARTUUID "${GET_ROOT}")
+fi
 
 if [[ ! -d "/sys/firmware/efi" ]]; then
-    GET_PART=$(\df /boot | grep /dev | cut -f1 -d' ')
+    GET_BOOT=$(\df /boot | grep /dev | cut -f1 -d' ')
 else
-    GET_PART=$(\df /boot/efi | grep /dev | cut -f1 -d' ')
+    GET_BOOT=$(\df /boot/efi | grep /dev | cut -f1 -d' ')
 fi
-BOOT_PART=$(lsblk -no PARTUUID ${GET_PART})
+BOOT_PART=$(lsblk -no PARTUUID "${GET_BOOT}")
 
 # Caches result of 'nproc'
 NPROC=$(nproc)
@@ -110,10 +116,10 @@ _bootloader_setup() {
     [[ ${no_mitigations} -eq 1 ]] &&
         MITIGATIONS_OFF="ibt=off mitigations=off"
 
-    if [[ ${use_disk_encryption} -eq 1 ]]; then
-        REQUIRED_PARAMS="rd.luks.name=${ROOT_DISK}=lukspart rd.luks.options=discard root=/dev/mapper/lukspart rootflags=subvol=@root rw"
+    if [[ ${DISK_ENCRYPTED} -eq 1 ]]; then
+        REQUIRED_PARAMS="rd.luks.name=${ROOT_PART}=lukspart rd.luks.options=discard root=/dev/mapper/lukspart rootflags=subvol=@root rw"
     else
-        REQUIRED_PARAMS="root=/dev/disk/by-partuuid/${ROOT_DISK} rootflags=subvol=@root rw"
+        REQUIRED_PARAMS="root=/dev/disk/by-partuuid/${ROOT_PART} rootflags=subvol=@root rw"
     fi
 
     # https://access.redhat.com/sites/default/files/attachments/201501-perf-brief-low-latency-tuning-rhel7-v1.1.pdf
