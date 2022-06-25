@@ -115,7 +115,7 @@ if [[ ${DENY_SUPERUSER:-} -ne 1 && $(id -u) -eq 0 ]]; then
 	# Manually detect kernel version to stop breakage if the currently booted kernel isn't the latest installed.
 	_build_initramfs() {
 		local MODULES=$(ls -tU /lib/modules | tail -1)
-		local NAME=$(initramfs-$(uname -r | awk -F. '{print $1"."$2}')-$(uname -m))
+		local NAME="initramfs-$(uname -r | awk -F. '{print $1"."$2}')-$(uname -m)"
 		mkinitcpio -k ${MODULES} -g "/boot/${NAME}.img"
 		mkinitcpio -k ${MODULES} -g "/boot/${NAME}-fallback.img" -S autodetect
 	}
