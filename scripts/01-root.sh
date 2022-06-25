@@ -242,10 +242,6 @@ _system_configuration() {
     fi
 }
 
-# Prevents many unnecessary initramfs generations, speeding up the install process drastically.
-ln -sf /dev/null /usr/share/libalpm/hooks/60-mkinitcpio-remove.hook
-ln -sf /dev/null /usr/share/libalpm/hooks/90-mkinitcpio-install.hook
-
 _package_installers
 _config_dolphin
 _bootloader_setup

@@ -24,6 +24,15 @@ chmod +x -R "${GIT_DIR}"
 
 clear
 
+# Prevents many unnecessary initramfs generations, speeding up the install process drastically.
+ln -sf /dev/null /usr/share/libalpm/hooks/60-mkinitcpio-remove.hook
+ln -sf /dev/null /usr/share/libalpm/hooks/90-mkinitcpio-install.hook
+_repair_mkinitcpio() {
+    [[ ! -s "/usr/share/libalpm/hooks/60-mkinitcpio-remove.hook" || ! -s "/usr/share/libalpm/hooks/90-mkinitcpio-install.hook" ]] &&
+        pacman -S --quiet --noconfirm --ask=4 --overwrite="*" mkinitcpio
+}
+trap _repair_mkinitcpio EXIT
+
 _snapper_part1() {
     ("${GIT_DIR}/scripts/snapper_part1.sh") |& tee "${GIT_DIR}/logs/snapper_part1.log"
 }
@@ -33,23 +42,23 @@ _snapper_part1
 snapper create -t single -d "Before Dux installation"
 
 _01() {
-	("${GIT_DIR}/scripts/01-root.sh") |& tee "${GIT_DIR}/logs/01-root.log" || return
+    ("${GIT_DIR}/scripts/01-root.sh") |& tee "${GIT_DIR}/logs/01-root.log" || return
 }
 _01
 
 _02() {
-	(sudo -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/02-nonroot.sh") |& tee "${GIT_DIR}/logs/02-nonroot.sh" || return
+    (sudo -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/02-nonroot.sh") |& tee "${GIT_DIR}/logs/02-nonroot.sh" || return
 }
 _02
 
 _pipewire() {
-	("${GIT_DIR}/scripts/Pipewire.sh") |& tee "${GIT_DIR}/logs/Pipewire.log" || return
+    ("${GIT_DIR}/scripts/Pipewire.sh") |& tee "${GIT_DIR}/logs/Pipewire.log" || return
 }
 _pipewire
 
 _gpu() {
-	[[ ${disable_gpu} -ne 1 ]] &&
-		("${GIT_DIR}/scripts/GPU.sh") |& tee "${GIT_DIR}/logs/GPU.log" || return
+    [[ ${disable_gpu} -ne 1 ]] &&
+        ("${GIT_DIR}/scripts/GPU.sh") |& tee "${GIT_DIR}/logs/GPU.log" || return
 }
 _gpu
 
@@ -73,9 +82,9 @@ _snapper_part2() {
 _snapper_part2
 
 _03() {
-	("${GIT_DIR}/scripts/03-finalize.sh") |& tee "${GIT_DIR}/logs/03-finalize.log" || return
+    ("${GIT_DIR}/scripts/03-finalize.sh") |& tee "${GIT_DIR}/logs/03-finalize.log" || return
 }
 _03
 
 whiptail --yesno "A reboot is required to complete installation.\nAfter rebooting, read through 0.3_booted.adoc.\nReboot now?" 0 0 &&
-	reboot -f
+    reboot -f
