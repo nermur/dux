@@ -120,7 +120,7 @@ _flatpaks_add || :
 
 if [[ ${IS_CHROOT} -eq 0 ]]; then
 	[[ ${REGENERATE_INITRAMFS} -eq 1 ]] &&
-		mkinitcpio -P
+		_build_initramfs
 
 	[[ ${REGENERATE_GRUB2_CONFIG} -eq 1 ]] &&
 		grub-mkconfig -o /boot/grub/grub.cfg

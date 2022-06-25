@@ -11,9 +11,11 @@ source "${GIT_DIR}/configs/settings.sh"
 clear
 
 # Now is the right time to generate a initramfs.
-pacman -S --quiet --noconfirm --ask=4 --overwrite="*" mkinitcpio "linux$(uname -r | awk -F. '{print $1$2}')-headers"
+pacman -S --quiet --noconfirm --ask=4 --overwrite="*" mkinitcpio
 
-mkinitcpio -P
+PKGS+="dkms linux$(uname -r | awk -F. '{print $1$2}')-headers "
+_pkgs_add
+_build_initramfs
 
 if lspci | grep -P "VGA|3D|Display" | grep -q "NVIDIA"; then
     HAS_NVIDIA_GPU=1
