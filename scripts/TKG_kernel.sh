@@ -10,8 +10,8 @@ source "${GIT_DIR}/scripts/GLOBAL_IMPORTS.sh"
 unset DENY_SUPERUSER
 
 CPU_VENDOR=$(grep -m1 'vendor' /proc/cpuinfo | cut -f2 -d' ')
+MARCH=$(gcc -march=native -Q --help=target | grep -oP '(?<=-march=).*' -m1 | awk '{$1=$1};1')
 
-# shellcheck disable=SC2249
 case $(gcc -march=native -Q --help=target | grep -e '-march=' | cut -f3 | sed '2d') in
 # AMD
 "k8-sse3") MARCH_TKG="k8sse3" ;;
@@ -29,6 +29,7 @@ case $(gcc -march=native -Q --help=target | grep -e '-march=' | cut -f3 | sed '2
 "icelake-client") MARCH_TKG="icelake" ;;
 "icelake-server") MARCH_TKG="icelake" ;;
 "goldmont-plus") MARCH_TKG="goldmontplus" ;;
+*) ;;
 esac
 
 if [[ ! -d "/home/${WHICH_USER}/linux-tkg" ]]; then
@@ -77,8 +78,10 @@ case "${CPU_VENDOR}" in
     ;;
 esac
 
-if [[ -z "${MARCH_TKG}" ]]; then
-    sed -i "s/_processor_opt.*/_processor_opt=\"${MARCH}\"" >>/home/"${WHICH_USER}"/.config/frogminer/linux-tkg.cfg
+if [[ -n "${MARCH_TKG}" ]]; then
+    sed -i "s/_processor_opt.*/_processor_opt=\"${MARCH_TKG}\"/" /home/"${WHICH_USER}"/.config/frogminer/linux-tkg.cfg
 else
-    sed -i "s/_processor_opt.*/_processor_opt=\"${MARCH_TKG}\"" >>/home/"${WHICH_USER}"/.config/frogminer/linux-tkg.cfg
+    sed -i "s/_processor_opt.*/_processor_opt=\"${MARCH}\"/" /home/"${WHICH_USER}"/.config/frogminer/linux-tkg.cfg
 fi
+
+echo -e "\nYou can now compile linux-tkg.\nOptionally, check /home/${WHICH_USER}/.config/frogminer/linux-tkg.cfg to see if the configuration is to your liking."
