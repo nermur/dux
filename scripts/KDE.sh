@@ -20,29 +20,18 @@ _setup_sddm() {
 	mkdir -p "/etc/sddm.conf.d/"
 	\cp "${cp_flags}" "${GIT_DIR}/files${SDDM_CONF}" "/etc/sddm.conf.d/"
 
-	if [[ "${sddm_autologin}" -eq 1 ]]; then
-		kwriteconfig5 --file "${SDDM_CONF}" --group "Autologin" --key "Session" "${sddm_autologin_session_type}"
-		kwriteconfig5 --file "${SDDM_CONF}" --group "Autologin" --key "User" "${WHICH_USER}"
-	fi
-
 	systemctl disable entrance.service gdm.service lightdm.service lxdm.service xdm.service >&/dev/null || :
 	SERVICES+="sddm.service "
 }
 
-if [[ ${kde_install_virtual_keyboard} -eq 1 ]]; then
-	PKGS+="qt5-virtualkeyboard "
-	kwriteconfig5 --file "${SDDM_CONF}" --group "General" --key "InputMethod" "qtvirtualkeyboard"
-fi
-
-[[ ${kde_use_kwinft} -eq 1 ]] &&
-	PKGS+="kwinft "
-
 PKGS+="plasma-wayland-session colord-kde kwallet-pam kwalletmanager konsole spectacle aspell aspell-en networkmanager \
 xdg-desktop-portal xdg-desktop-portal-kde \
-sddm sddm-kcm \
+sddm sddm-kcm qt5-virtualkeyboard \
 lib32-libappindicator-gtk2 lib32-libappindicator-gtk3 libappindicator-gtk2 libappindicator-gtk3 \
 kcm-wacomtablet "
 _pkgs_add
+
+kwriteconfig5 --file "${SDDM_CONF}" --group "General" --key "InputMethod" "qtvirtualkeyboard"
 
 # Incase GNOME was used previously.
 kwriteconfig5 --delete --file /home/"${WHICH_USER}"/.config/konsolerc --group "UiSettings" --key "ColorScheme"

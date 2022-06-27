@@ -39,12 +39,7 @@ _amd_setup() {
 }
 
 _intel_setup() {
-	PKGS+="intel-media-sdk vulkan-intel "
-
-	[[ ${intel_video_accel} -eq 1 ]] &&
-		PKGS+="libva-intel-driver lib32-libva-intel-driver "
-	[[ ${intel_video_accel} -eq 2 ]] &&
-		PKGS+="intel-media-driver "
+	PKGS+="intel-media-sdk vulkan-intel libva-intel-driver lib32-libva-intel-driver intel-media-driver "
 
 	# Early load KMS driver
 	if ! grep -q "i915" /etc/mkinitcpio.conf; then

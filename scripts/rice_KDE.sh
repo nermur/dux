@@ -17,4 +17,5 @@ PKGS_AUR+="papirus-folders-git "
 _pkgs_add
 _pkgs_aur_add
 
+# shellcheck disable=SC2086
 (sudo -H -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/non-SU/rice_KDE_part2.sh") |& tee "${GIT_DIR}/logs/rice_KDE_part2.log"

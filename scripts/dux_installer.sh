@@ -62,28 +62,24 @@ _gpu() {
 }
 _gpu
 
-if [[ ${XDG_SESSION_DESKTOP} = "GNOME" ]] && [[ ${allow_gnome_rice} -eq 1 ]]; then
-    _gnome_rice() {
-        ("${GIT_DIR}/scripts/rice_GNOME.sh") |& tee "${GIT_DIR}/logs/rice_GNOME.log"
-        (sudo -H -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/non-SU/rice_GNOME_part2.sh") |& tee "${GIT_DIR}/logs/rice_GNOME_part2.log"
-    }
-    _gnome_rice
-elif [[ ${XDG_SESSION_DESKTOP} = "KDE" ]] && [[ ${allow_kde_rice} -eq 1 ]]; then
-    _kde_rice() {
-        ("${GIT_DIR}/scripts/rice_KDE.sh") |& tee "${GIT_DIR}/logs/rice_KDE.log"
-        (sudo -H -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/non-SU/rice_KDE_part2.sh") |& tee "${GIT_DIR}/logs/rice_KDE_part2.log"
-    }
-    _kde_rice
+if [[ ${XDG_SESSION_DESKTOP} = "GNOME" ]] && [[ ${auto_gnome_rice} -eq 1 ]]; then
+    ("${GIT_DIR}/scripts/rice_GNOME.sh") |& tee "${GIT_DIR}/logs/rice_GNOME.log"
+
+    (sudo -H -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/non-SU/rice_GNOME_part2.sh") |& tee "${GIT_DIR}/logs/rice_GNOME_part2.log" || return
+
+elif [[ ${XDG_SESSION_DESKTOP} = "KDE" ]] && [[ ${automatic_kde_rice} -eq 1 ]]; then
+    ("${GIT_DIR}/scripts/rice_KDE.sh") |& tee "${GIT_DIR}/logs/rice_KDE.log"
+
+    (sudo -H -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/non-SU/rice_KDE_part2.sh") |& tee "${GIT_DIR}/logs/rice_KDE_part2.log" || return
 fi
 
 _snapper_part2() {
-    ("${GIT_DIR}/scripts/snapper_part2.sh") |& tee "${GIT_DIR}/logs/snapper_part2.log"
+    ("${GIT_DIR}/scripts/snapper_part2.sh") |& tee "${GIT_DIR}/logs/snapper_part2.log" || return
 }
 _snapper_part2
 
 _03() {
     ("${GIT_DIR}/scripts/03-finalize.sh") |& tee "${GIT_DIR}/logs/03-finalize.log" || return
-    _repair_mkinitcpio(){}
 }
 _03
 

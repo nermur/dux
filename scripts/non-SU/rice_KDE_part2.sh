@@ -15,6 +15,9 @@ fi
 # Generate font cache so new fonts work correctly.
 fc-cache -f
 
+# Disable Splash Screen to load into the desktop faster.
+\cp "${cp_flags}" "${GIT_DIR}"/files/home/.config/ksplashrc "/home/${WHICH_USER}/.config/"
+
 kwriteconfig5 --group "General" --key "XftAntialias" "true"
 kwriteconfig5 --group "General" --key "XftHintStyle" "${kde_font_hinting}"
 kwriteconfig5 --group "General" --key "XftSubPixel" "${kde_font_aliasing}"

@@ -4,7 +4,7 @@ set -a
 
 # === Proprietary Software ===
 # An online music player that's very useful for quickly finding songs you like, for both the big and small artists.
-spotify="1"
+spotify="0"
 
 # Disables ads for Spotify Free users.
 spotify_adblock="0"
@@ -12,16 +12,19 @@ spotify_adblock="0"
 # Official Discord client with additional safety and privacy provided by Flatpak's sandboxing.
 # However, this sandboxing prevents the following features from working out of the box: 
 # Game Activity, Unrestricted File Access, Rich Presence.
-discord="1"
+discord="0"
 
 # Text editor and/or IDE.
-visual_studio_code="1"
+visual_studio_code="0"
 
 # Seemingly the best remote desktop client and server.
 # NOTE: The NoMachine server is disabled by default; if desired: # systemctl enable --now nxserver.service
 nomachine="0"
 
 # === Open-Source Software ===
+# The overall best Microsoft Office replacement.
+onlyoffice="1"
+
 # Interactive application firewall.
 # Please have clear intentions for using this, as it'll be annoying to handle otherwise.
 opensnitch="0"
@@ -33,9 +36,6 @@ easyeffects="0"
 
 # C/C++ debugging and reverse engineering: Valgrind, GDB, Rizin + ghidra (graphical interface: Cutter), pwndbg.
 cxx_toolbox="0"
-
-# The overall best Microsoft Office replacement.
-onlyoffice="1"
 
 # A patchbay for Pipewire. Used to direct where audio transmits to and from.
 helvum="1"

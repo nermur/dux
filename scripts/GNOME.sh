@@ -14,12 +14,6 @@ _setup_gdm() {
 
 	sed -i "s/AutomaticLogin=~GNOME.sh~/AutomaticLogin=${WHICH_USER}/" "${GDM_CONF}"
 
-	[[ ${gdm_auto_login} -eq 1 ]] &&
-		sed -i "s/AutomaticLoginEnable=.*/AutomaticLoginEnable=True/" "${GDM_CONF}"
-
-	[[ ${gdm_disable_wayland} -eq 1 ]] &&
-		sed -i '/^#WaylandEnable/s/^#//' "${GDM_CONF}"
-
 	systemctl disable entrance.service lightdm.service lxdm.service sddm.service xdm.service >&/dev/null || :
 	SERVICES+="gdm.service "
 }

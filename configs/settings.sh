@@ -17,15 +17,16 @@ bootloader_type="2"
 # https://bugs.archlinux.org/task/74891?project=1&pagenum=1
 no_mitigations="1"
 
+# Automatically installs software specified in configs/software_catalog.sh
+auto_software_catalog="1"
+
+# Uninstalls low-quality software Manjaro may include by default.
+auto_remove_software="1"
+
 # === Desktop Environment: GNOME ===
-# GNOME Display Manager
-gdm_auto_login="1"
-gdm_disable_wayland="0"
-
 # It's not recommended to run the non-riced/vanilla GNOME.
-allow_gnome_rice="1"
+auto_gnome_rice="1"
 
-if [[ ${allow_gnome_rice} -eq 1 ]]; then
     gnome_document_font_name="Liberation Sans 11"
     gnome_font_name="Liberation Sans 11"
     gnome_monospace_font_name="Hack 10" # This is actually font size 11; it's a GNOME quirk.
@@ -48,23 +49,10 @@ if [[ ${allow_gnome_rice} -eq 1 ]]; then
 
     # Don't automatically turn off the screen.
     gnome_disable_idle="1"
-fi
 
 # === Desktop Environment: KDE ===
-# Simple Desktop Display Manager
-sddm_autologin="1"
-sddm_autologin_session_type="plasma" # plasma, plasmawayland
+auto_kde_rice="1"
 
-# A touchscreen keyboard.
-kde_install_virtual_keyboard="0"
-
-# Try this only if KDE seems buggy.
-kde_use_kwinft="0"
-
-# As with GNOME, care was taken to ensure this doesn't break anything.
-allow_kde_rice="1"
-
-if [[ ${allow_kde_rice} -eq 1 ]]; then
     kde_general_font="Liberation Sans,11"
     kde_fixed_width_font="Hack,11"
     kde_small_font="Liberation Sans,9"
@@ -81,14 +69,14 @@ if [[ ${allow_kde_rice} -eq 1 ]]; then
     # none, rgb, bgr, vrgb (Vertical RGB), vbgr (Vertical BGR)
     kde_font_aliasing="rgb"
 
-    # Disables window titlebars to prioritize mouse & keyboard instead of mouse oriented window management.
-    kwin_disable_titlebars="1"
+    # Disables window titlebars to prioritize mouse & keyboard instead of mouse oriented window management;
+    # KDE doesn't seem great with this, unlike GNOME.
+    kwin_disable_titlebars="0"
 
     kwin_animations="false" # true, false
 
     # Controls window drop-shadows: ShadowNone, ShadowSmall, ShadowMedium, ShadowLarge, ShadowVeryLarge
     kwin_shadow_size="ShadowNone"
-fi
 
 # === Graphics Card options ===
 # 1: Skip installing any and all GPU software.
@@ -128,8 +116,3 @@ amd_graphics_force_radeon="0"
 
 # Allows adjusting clocks and voltages; Gamemode can use this to automatically set/unset max performance.
 amd_graphics_sysfs="1"
-
-# Enables hardware video acceleration; use 2 if possible.
-# 1: GMA 4500 (2008) up to Coffee Lake's (2017) HD Graphics.
-# 2: HD Graphics series starting from Broadwell (2014) and newer.
-intel_video_accel="2"

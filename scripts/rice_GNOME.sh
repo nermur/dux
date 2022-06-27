@@ -32,4 +32,5 @@ papirus-folders -C adwaita --theme Papirus-Dark
 
 _gnome_flatpak
 
+# shellcheck disable=SC2086
 (sudo -H -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/non-SU/rice_GNOME_part2.sh") |& tee "${GIT_DIR}/logs/rice_GNOME_part2.log"

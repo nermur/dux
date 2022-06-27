@@ -10,11 +10,15 @@ source "${GIT_DIR}/configs/settings.sh"
 
 clear
 
+VARIANT=$(uname -r | awk -F. '{print $1$2}')
+
 # Now is the right time to generate a initramfs.
 pacman -S --quiet --noconfirm --ask=4 --overwrite="*" mkinitcpio
 
-PKGS+="dkms linux$(uname -r | awk -F. '{print $1$2}')-headers "
+PKGS+="dkms linux${VARIANT}-headers "
 _pkgs_add
+pacman -S --quiet --noconfirm --ask=4 "linux${VARIANT}"
+
 _build_initramfs
 
 if lspci | grep -P "VGA|3D|Display" | grep -q "NVIDIA"; then

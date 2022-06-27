@@ -91,19 +91,17 @@ _nvidia_setup() {
 case ${nvidia_driver_series} in
 1)
 	_nvidia_setup
-	PKGS+="nvidia-dkms egl-wayland nvidia-utils opencl-nvidia libxnvctrl nvidia-settings \
+	PKGS+="nvidia-dkms egl-wayland nvidia-utils opencl-nvidia libxnvctrl \
 				lib32-nvidia-utils lib32-opencl-nvidia "
 	;;
 2)
 	_nvidia_setup
-	PKGS+="egl-wayland "
-	PKGS_AUR+="nvidia-470xx-dkms nvidia-470xx-utils opencl-nvidia-470xx libxnvctrl-470xx nvidia-470xx-settings \
+	PKGS+="egl-wayland nvidia-470xx-dkms nvidia-470xx-utils opencl-nvidia-470xx libxnvctrl-470xx \
 				lib32-nvidia-470xx-utils lib32-opencl-nvidia-470xx "
 	;;
 3) # Settings for current drivers seem to work fine for 390.xxx
 	_nvidia_setup
-	PKGS+="egl-wayland "
-	PKGS_AUR+="nvidia-390xx-dkms nvidia-390xx-utils opencl-nvidia-390xx libxnvctrl-390xx nvidia-390xx-settings \
+	PKGS+="egl-wayland nvidia-390xx-dkms nvidia-390xx-utils opencl-nvidia-390xx libxnvctrl-390xx \
 				lib32-nvidia-390xx-utils lib32-opencl-nvidia-390xx "
 	;;
 4)

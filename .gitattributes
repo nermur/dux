@@ -1,2 +1,3 @@
-# Using CRLF will break shellcheck's ability to read .sh files
-*.sh    eol=lf
+# Using CRLF breaks shellcheck's ability to read .sh files.
+# LF will be forced since this is for Linux only after all.
+*    eol=lf

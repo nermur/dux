@@ -52,7 +52,7 @@ _package_installers() {
         PKGS+="fprintd imagemagick "
 
     [[ ${bootloader_type} -eq 2 ]] &&
-        PKGS+="refind "
+        PKGS+="memtest86-efi refind refind-theme-maia "
     [[ -d "/sys/firmware/efi" ]] &&
         PKGS+="efibootmgr "
 
@@ -85,10 +85,10 @@ _bootloader_setup() {
     "none")
         if [[ ${CPU_VENDOR} = "AuthenticAMD" ]]; then
             PKGS+="amd-ucode "
-            MICROCODE="initrd=amd-ucode.img initrd=initramfs-%v.img"
+            MICROCODE="initrd=/@/boot/amd-ucode.img initrd=/@/boot/initramfs-%v.img"
         elif [[ ${CPU_VENDOR} = "GenuineIntel" ]]; then
             PKGS+="intel-ucode "
-            MICROCODE="initrd=intel-ucode.img initrd=initramfs-%v.img"
+            MICROCODE="initrd=/@/boot/intel-ucode.img initrd=/@/boot/initramfs-%v.img"
         fi
         ;;
     "kvm")
@@ -240,6 +240,9 @@ _system_configuration() {
         # shellcheck disable=SC2086
         flatpak override ${FLATPAK_PARAMS}
     fi
+
+    # Ensure the default shell is Zsh.
+    chsh -s /bin/zsh
 }
 
 _package_installers

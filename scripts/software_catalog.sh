@@ -8,7 +8,7 @@ cd "${SCRIPT_DIR}" && GIT_DIR=$(git rev-parse --show-toplevel)
 source "${GIT_DIR}/scripts/GLOBAL_IMPORTS.sh"
 unset KEEP_GOING
 source "${GIT_DIR}/configs/settings.sh"
-source "${GIT_DIR}/configs/optional_software.sh"
+source "${GIT_DIR}/configs/software_catalog.sh"
 
 if [[ ${IS_CHROOT} -eq 1 ]]; then
 	echo -e "\nERROR: Do not run this script inside a chroot!\n"
@@ -19,6 +19,11 @@ mkdir "${mkdir_flags}" /home/"${WHICH_USER}"/.config/systemd/user
 chown -R "${WHICH_USER}:${WHICH_USER}" "/home/${WHICH_USER}/.config/systemd/user"
 
 chmod +x -R "${GIT_DIR}"
+
+if [[ ${auto_remove_software} -eq 1 ]]; then
+	REMOVE_PKGS+="kcalc okular gwenview ksystemlog "
+	_remove_installed_pkgs
+fi
 
 [[ ${helvum} -eq 1 ]] &&
 	PKGS+="helvum "
@@ -95,7 +100,7 @@ if [[ ${nomacs} -eq 1 ]]; then
 		mkdir -p "/home/${WHICH_USER}/.config/nomacs"
 		local CONF="/home/${WHICH_USER}/.config/nomacs/Image Lounge.conf"
 		kwriteconfig5 --file "${CONF}" --group "DisplaySettings" --key "themeName312" "System.css"
-		if [[ ${allow_gnome_rice} -eq 1 ]] || [[ ${allow_kde_rice} -eq 1 ]]; then
+		if [[ ${auto_gnome_rice} -eq 1 ]] || [[ ${auto_kde_rice} -eq 1 ]]; then
 			kwriteconfig5 --file "${CONF}" --group "DisplaySettings" --key "defaultIconColor" "false"
 			kwriteconfig5 --file "${CONF}" --group "DisplaySettings" --key "iconColorRGBA" "4294967295"
 		fi
@@ -133,8 +138,8 @@ fi
 	FLATPAKS+="net.ankiweb.Anki "
 
 if [[ ${vg_toolbox} -eq 1 ]]; then
-	PKGS+="lutris "
-	PKGS_AUR+="goverlay-bin mangohud lib32-mangohud "
+	PKGS+="lutris mangohud lib32-mangohud "
+	PKGS_AUR+="goverlay-bin "
 	FLATPAKS+="net.davidotek.pupgui2 "
 fi
 
