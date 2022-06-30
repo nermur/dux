@@ -27,6 +27,9 @@ auto_remove_software="1"
 # It's not recommended to run the non-riced/vanilla GNOME.
 auto_gnome_rice="1"
 
+    # Prioritizes mouse & keyboard instead of mouse oriented window management, and frees up screen space.
+    gnome_no_titlebars="1"
+
     gnome_document_font_name="Liberation Sans 11"
     gnome_font_name="Liberation Sans 11"
     gnome_monospace_font_name="Hack 10" # This is actually font size 11; it's a GNOME quirk.
@@ -39,14 +42,12 @@ auto_gnome_rice="1"
     gnome_remember_app_usage="false"    # true, false
     gnome_remember_recent_files="false" # true, false
     gnome_animations="false"            # true, false
-
+    
     # Support for tray icons.
     gnome_extension_appindicator="1"
-    # Recommended to use alongside the no titlebars tweak.
+    # Recommended to use alongside 'gnome_no_titlebars'.
     gnome_extension_pop_shell="0"
-    # Prioritizes mouse & keyboard instead of mouse oriented window management, and frees up screen space.
-    gnome_extension_no_titlebars="1"
-
+    
     # Don't automatically turn off the screen.
     gnome_disable_idle="1"
 
@@ -114,5 +115,5 @@ esac
 # Force 'radeon' driver (GCN2 and below only, but not recommended).
 amd_graphics_force_radeon="0"
 
-# Allows adjusting clocks and voltages; Gamemode can use this to automatically set/unset max performance.
+# Allows adjusting clocks and voltages; GameMode can use this to automatically set/unset max performance.
 amd_graphics_sysfs="1"

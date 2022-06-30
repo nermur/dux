@@ -19,14 +19,12 @@ _gnome_flatpak() {
 	flatpak override --env=QT_STYLE_OVERRIDE=kvantum --filesystem=xdg-config/Kvantum:ro
 }
 
-PKGS+="kvantum qt6-svg qt5ct qt6ct papirus-icon-theme ${FONT_SELECTION} "
+PKGS+="kvantum qt6-svg qt5ct qt6ct papirus-icon-theme adw-gtk3 papirus-folders pamac-gnome-integration ${FONT_SELECTION} "
 
 [[ ${gnome_extension_appindicator} -eq 1 ]] &&
 	PKGS+="lib32-libappindicator-gtk2 lib32-libappindicator-gtk3 libappindicator-gtk2 libappindicator-gtk3 gnome-shell-extension-appindicator "
 
-PKGS_AUR+="papirus-folders-git "
 _pkgs_add
-_pkgs_aur_add
 
 papirus-folders -C adwaita --theme Papirus-Dark
 

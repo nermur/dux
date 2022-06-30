@@ -20,4 +20,4 @@ mkdir "${mkdir_flags}" /etc/security/limits.d
 \cp "${cp_flags}" "${GIT_DIR}"/files/etc/security/limits.d/95-pipewire.conf "/etc/security/limits.d/"
 
 # Lowers audio latency (delay) and keeps it consistent.
-\cp "${cp_flags}" "${GIT_DIR}"/files/etc/pipewire/pipewire.conf.d/99-low-latency.conf "/etc/pipewire/pipewire.conf.d/"
+\cp "${cp_flags}" -R "${GIT_DIR}"/files/etc/pipewire/ "/etc/"

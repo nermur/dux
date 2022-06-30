@@ -11,6 +11,8 @@ unset DENY_SUPERUSER
 
 CPU_VENDOR=$(grep -m1 'vendor' /proc/cpuinfo | cut -f2 -d' ')
 MARCH=$(gcc -march=native -Q --help=target | grep -oP '(?<=-march=).*' -m1 | awk '{$1=$1};1')
+# Don't use kernel 5.18, it's highly problematic.
+KERNEL_VER="5.17"
 
 case $(gcc -march=native -Q --help=target | grep -e '-march=' | cut -f3 | sed '2d') in
 # AMD
@@ -49,10 +51,11 @@ mkdir -p /home/"${WHICH_USER}"/.config/frogminer
 cp "${cp_flags}" /home/"${WHICH_USER}"/linux-tkg/customization.cfg /home/"${WHICH_USER}"/.config/frogminer/linux-tkg.cfg
 
 sed -i -e 's/_distro.*/_distro="Arch"/' \
+    -e "s/_version.*/_version=\"${KERNEL_VER}\"/" \
     -e 's/_force_all_threads.*/_force_all_threads="false"/' \
     -e 's/_menunconfig.*/_menunconfig="false"/' \
     -e 's/_diffconfig.*/_diffconfig="false"/' \
-    -e 's/_cpusched.*/_cpusched="upds"/' \
+    -e 's/_cpusched.*/_cpusched="pds"/' \
     -e 's/_compiler.*/_compiler="gcc"/' \
     -e 's/_sched_yield_type.*/_sched_yield_type="0"/' \
     -e 's/_rr_interval.*/_rr_interval="default"/' \
@@ -63,6 +66,8 @@ sed -i -e 's/_distro.*/_distro="Arch"/' \
     -e 's/_timer_freq.*/_timer_freq="500"/' \
     -e 's/_tcp_cong_alg.*/_tcp_cong_alg="bbr"/' \
     /home/"${WHICH_USER}"/.config/frogminer/linux-tkg.cfg
+
+sed  /home/"${WHICH_USER}"/.config/frogminer/linux-tkg.cfg
 
 case "${CPU_VENDOR}" in
 "AuthenticAMD")

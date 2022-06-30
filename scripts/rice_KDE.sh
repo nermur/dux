@@ -12,10 +12,8 @@ if [[ ${IS_CHROOT} -eq 1 ]]; then
 	exit 1
 fi
 
-PKGS+="kvantum qt6-svg papirus-icon-theme ${FONT_SELECTION} "
-PKGS_AUR+="papirus-folders-git "
+PKGS+="kvantum qt6-svg papirus-icon-theme papirus-folders ${FONT_SELECTION} "
 _pkgs_add
-_pkgs_aur_add
 
 # shellcheck disable=SC2086
 (sudo -H -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/non-SU/rice_KDE_part2.sh") |& tee "${GIT_DIR}/logs/rice_KDE_part2.log"

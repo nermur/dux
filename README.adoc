@@ -40,6 +40,15 @@ NOTE: Skip to link:0.1_start.adoc[0.1_start.adoc] for installation.
 *** Credit (a link to Dux in the README) should be given so others can find their way back to here, but it's optional (despite what the license says).
 **** I use the strongest open-source license due to the legal protections it grants me in my home country of the United States, it'd be foolish not to do so.
 
+== Why Manjaro instead of Arch Linux (as was the case in link:https://github.com/nermur/dux-legacy[dux-legacy])
+* Many AUR packages are officially packaged and tested by Manjaro developers.
+** Makes for a more stable base, and drastically reduces the installation time of Dux.
+* Manjaro dodges some severe problems Arch has seemingly every few months by not constantly rolling out updates; updates are done around every 2 weeks in large chunks on the 'stable' repos, but you can use 'testing' repos to get the same rolling experience Arch Linux has.
+* Includes software such as Pamac which greatly increase the usability of Arch for those that don't wish to touch the terminal.
+** Even if the terminal gets used frequently, it's a useful utility to have an easier time tracking down changes.
+* Dux is by one man, and there won't be others with direct access to this repo for trust/security reasons.
+** I have many different interests, and not enough time to juggle between them all.
+
 == Notable features installed by Dux
 * `KDE` and `GNOME` desktop environments having an equal level of support/testing.
 
@@ -56,8 +65,12 @@ NOTE: Skip to link:0.1_start.adoc[0.1_start.adoc] for installation.
 * `zRAM`
 ** Memory compression used to stop relying on a disk swap file that reduces the life-span of disks, and to avoid heavy I/O usage that would slow the system down noticeably.
 
-* `Gamemode`
+* `GameMode`
 ** Allows for a process to request temporary disabling of power-saving features for extra performance, mainly used by Lutris for video games.
+
+* `PipeWire` tweaks
+** For consistently low latency audio, making Bluetooth audio devices more enjoyable to use, and aid with fast rhythm games such as osu! and StepMania.
+** If `PulseAudio` is installed, it will be replaced with `PipeWire`.
 
 * Rootless `Xorg` display server
 ** Less memory usage and increased security; not used for NVIDIA GPUs however, as it breaks its overclocking capabilities.

@@ -19,12 +19,15 @@ fc-cache -f
 _set_configs() {
 	mkdir "${mkdir_flags}" /home/"${WHICH_USER}"/.config/{environment.d,gtk-3.0,gtk-4.0,Kvantum,qt5ct,qt6ct}
 
+	[[ ${gnome_no_titlebars} -eq 1 ]] &&
+		\cp "${cp_flags}" "${GIT_DIR}"/files/home/.config/gtk-3.0/gtk.css "/home/${WHICH_USER}/.config/gtk-3.0/"
+
 	\cp "${cp_flags}" "${GIT_DIR}"/files/home/.gtkrc-2.0 "/home/${WHICH_USER}/"
 	\cp "${cp_flags}" "${GIT_DIR}"/files/home/.config/environment.d/gnome.conf "/home/${WHICH_USER}/.config/environment.d/"
 	\cp "${cp_flags}" "${GIT_DIR}"/files/home/.config/qt5ct/qt5ct.conf "/home/${WHICH_USER}/.config/qt5ct/"
 	\cp "${cp_flags}" "${GIT_DIR}"/files/home/.config/qt6ct/qt6ct.conf "/home/${WHICH_USER}/.config/qt6ct/"
 
-	\cp "${cp_flags}" -R "${GIT_DIR}"/files/home/.config/gtk-3.0 "/home/${WHICH_USER}/.config"
+	\cp "${cp_flags}" "${GIT_DIR}"/files/home/.config/gtk-3.0/settings.ini "/home/${WHICH_USER}/.config/gtk-3.0"
 	\cp "${cp_flags}" -R "${GIT_DIR}"/files/home/.config/gtk-4.0 "/home/${WHICH_USER}/.config"
 
 	kwriteconfig5 --file /home/"${WHICH_USER}"/.config/Kvantum/kvantum.kvconfig --group "General" --key "theme" "KvGnomeDark"
@@ -39,9 +42,9 @@ _set_configs() {
 }
 _set_configs
 
-PKGS_AUR+="adw-gtk3-git "
-[[ ${gnome_extension_pop_shell} -eq 1 ]] && PKGS_AUR+="gnome-shell-extension-pop-shell-git "
-[[ ${gnome_extension_no_titlebars} -eq 1 ]] && PKGS_AUR+="gnome-shell-extension-gtktitlebar-git "
+[[ ${gnome_extension_pop_shell} -eq 1 ]] &&
+	PKGS+="gnome-shell-extension-pop-shell "
+
 _pkgs_aur_add
 
 _org_gnome_desktop() {
@@ -70,10 +73,7 @@ _org_gnome_desktop
 
 gsettings set org.gnome.shell disabled-extensions "[]"
 # If an extension doesn't exist, it'll be ignored.
-gsettings set org.gnome.shell enabled-extensions "['appindicatorsupport@rgcjonas.gmail.com', 'pop-shell@system76.com', 'gtktitlebar@velitasali.github.io']"
-
-[[ ${gnome_extension_no_titlebars} -eq 1 ]] &&
-	dconf write /org/gnome/shell/extensions/gtktitlebar/hide-window-titlebars "'always'"
+gsettings set org.gnome.shell enabled-extensions "['appindicatorsupport@rgcjonas.gmail.com', 'pop-shell@system76.com', 'pamac-updates@manjaro.org']"
 
 whiptail --yesno "Logging out is required to complete the rice.\nLogout now?" 0 0 &&
 	loginctl kill-user "${WHICH_USER}"

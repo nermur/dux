@@ -20,11 +20,6 @@ chown -R "${WHICH_USER}:${WHICH_USER}" "/home/${WHICH_USER}/.config/systemd/user
 
 chmod +x -R "${GIT_DIR}"
 
-if [[ ${auto_remove_software} -eq 1 ]]; then
-	REMOVE_PKGS+="kcalc okular gwenview ksystemlog "
-	_remove_installed_pkgs
-fi
-
 [[ ${helvum} -eq 1 ]] &&
 	PKGS+="helvum "
 

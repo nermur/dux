@@ -35,6 +35,11 @@ echo "%wheel ALL=(ALL) NOPASSWD: ALL" >/etc/sudoers.d/custom_settings
 
 mkdir "${mkdir_flags}" {/etc/{modules-load.d,NetworkManager/conf.d,modprobe.d,tmpfiles.d,pacman.d/hooks,X11,fonts,systemd/user,conf.d},/boot,/home/"${WHICH_USER}"/.config/{fontconfig/conf.d,systemd/user},/usr/share/libalpm/scripts}
 
+if [[ ${auto_remove_software} -eq 1 ]]; then
+	REMOVE_PKGS+="kcalc okular gwenview ksystemlog plasma-systemmonitor "
+	_remove_installed_pkgs
+fi
+
 _package_installers() {
     if [[ ${hardware_printers_and_scanners} -eq 1 ]]; then
         # Also requires nss-mdns; installed by default.
@@ -153,7 +158,9 @@ _bootloader_setup() {
             # x86_64-efi: rEFInd overrides GRUB2 without issues.
             refind-install
             # Tell rEFInd to detect the initramfs for linux-lts & linux automatically.
-            sed -i '/^#extra_kernel_version_strings/s/^#//' /boot/efi/EFI/refind/refind.conf
+            sed -i 's/.extra_kernel_version_strings/extra_kernel_version_strings/' \
+            -e "s/extra_kernel_version_strings.*/extra_kernel_version_strings linux-lts,linux,linux-tkg-upds,linux-tkg-pds,linux-tkg-bmq,linux-tkg-muqss,linux-tkg-cacule,linux-tkg-cfs" /boot/efi/EFI/refind/refind.conf
+
             \cp "${cp_flags}" "${GIT_DIR}"/files/etc/pacman.d/hooks/refind.hook "/etc/pacman.d/hooks/"
         }
         _refind_bootloader_config() {
