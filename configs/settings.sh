@@ -51,6 +51,9 @@ auto_gnome_rice="1"
     # Don't automatically turn off the screen.
     gnome_disable_idle="1"
 
+    # GNOME's "smart" window placement puts new windows in unpredictable places, sometimes at the top-most left corner.
+    gnome_center_new_windows="1"
+
 # === Desktop Environment: KDE ===
 auto_kde_rice="1"
 

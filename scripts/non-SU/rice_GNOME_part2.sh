@@ -75,5 +75,8 @@ gsettings set org.gnome.shell disabled-extensions "[]"
 # If an extension doesn't exist, it'll be ignored.
 gsettings set org.gnome.shell enabled-extensions "['appindicatorsupport@rgcjonas.gmail.com', 'pop-shell@system76.com', 'pamac-updates@manjaro.org']"
 
+[[ ${gnome_center_new_windows} -eq 1 ]] &&
+	gsettings set org.gnome.mutter center-new-windows "true"
+
 whiptail --yesno "Logging out is required to complete the rice.\nLogout now?" 0 0 &&
 	loginctl kill-user "${WHICH_USER}"
