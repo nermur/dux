@@ -55,10 +55,10 @@ case $(lspci | grep -P "VGA|3D|Display" | grep -Po "NVIDIA|AMD/ATI|Intel|VMware 
 *"NVIDIA"*)
 	_nvidia_setup() {
 		if [[ ${avoid_nvidia_gpus} -ne 1 ]]; then
-			(bash "${GIT_DIR}/scripts/_NVIDIA.sh") |& tee "${GIT_DIR}/logs/_NVIDIA.log" || return
+			(bash "${GIT_DIR}/scripts/_NVIDIA.sh") |& tee "${GIT_DIR}/logs/_NVIDIA.log"
 		fi
 	}
-	_nvidia_setup
+	_nvidia_setup || :
 	;;&
 *"AMD/ATI"*)
 	[[ ${avoid_amd_gpus} -ne 1 ]] &&
