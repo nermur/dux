@@ -106,10 +106,18 @@ fi
 if [[ ${DENY_SUPERUSER:-} -ne 1 && $(id -u) -ne 0 ]]; then
 	echo -e "\e[1m\nSuperuser required, prompting if needed...\e[0m\nCurrently affected scripts: \"${BASH_SOURCE[*]}\"\n" >&2
 	if hash sudo >&/dev/null; then
-		sudo bash "${0}"
+		if [[ ${DEBUG} -eq 1 ]]; then
+			sudo DEBUG=1 bash "${0}"
+		else
+			sudo bash "${0}"
+		fi
 		exit $?
 	elif hash doas >&/dev/null; then
-		doas bash "${0}"
+		if [[ ${DEBUG} -eq 1 ]]; then
+			doas DEBUG=1 bash "${0}"
+		else
+			doas bash "${0}"
+		fi
 		exit $?
 	fi
 fi

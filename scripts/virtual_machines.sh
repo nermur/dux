@@ -16,7 +16,7 @@ _base_setup() {
     _pkgs_add
 
     mkdir -p /etc/{modprobe.d,udev/rules.d}
-    mkdir -p /"${HOOK_DIR}"/{prepare/begin,started/begin,release/end}
+    mkdir -p /"${HOOK_DIR}"/"${domain_name}"/{prepare/begin,started/begin,release/end}
 
     \cp "${cp_flags}" "${GIT_DIR}"/files/etc/modprobe.d/custom_kvm.conf "/etc/modprobe.d/"
     \cp "${cp_flags}" "${GIT_DIR}"/files/etc/udev/rules.d/99-qemu.rules "/etc/udev/rules.d/"
