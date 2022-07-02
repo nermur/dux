@@ -42,11 +42,6 @@ _set_configs() {
 }
 _set_configs
 
-[[ ${gnome_extension_pop_shell} -eq 1 ]] &&
-	PKGS+="gnome-shell-extension-pop-shell "
-
-_pkgs_aur_add
-
 _org_gnome_desktop() {
 	local SCHEMA="org.gnome.desktop"
 	gsettings set "${SCHEMA}".interface document-font-name "${gnome_document_font_name}"

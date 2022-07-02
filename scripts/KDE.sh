@@ -33,10 +33,6 @@ _pkgs_add
 
 kwriteconfig5 --file "${SDDM_CONF}" --group "General" --key "InputMethod" "qtvirtualkeyboard"
 
-# Incase GNOME was used previously.
-kwriteconfig5 --delete --file /home/"${WHICH_USER}"/.config/konsolerc --group "UiSettings" --key "ColorScheme"
-kwriteconfig5 --delete --file /home/"${WHICH_USER}"/.config/konsolerc --group "UiSettings" --key "WindowColorScheme"
-
 _setup_sddm
 
 sudo -H -u "${WHICH_USER}" kwriteconfig5 --file /home/"${WHICH_USER}"/.config/ktimezonedrc --group "TimeZones" --key "LocalZone" "${system_timezone}"

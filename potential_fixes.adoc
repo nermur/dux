@@ -24,6 +24,9 @@ endif::[]
 ** Shows detailed information of a loaded kernel module.
 
 == Potential solutions
+* If GNOME or KDE locks up/crashes, it's likely from a bad video driver such as VMWare SVGA (VMWare and VirtualBox's GPU).
+** GNOME: Logout of GNOME, pick a user, then click the gear to use "GNOME on Xorg". Or switch to TTY4 via kbd:[LCtrl + LAlt + F4] and edit `/etc/gdm/custom.conf` to disable Wayland.
+
 * Simply rebooting.
 ** This can be required when say, you updated your current kernel, then suddenly your virtual machine can't start up and complains about a missing kernel module (such as "tun").
 

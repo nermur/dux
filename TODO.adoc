@@ -1,2 +1,0 @@
-* Finish fingerprint reader.
-* Finish moving user systemd services to the new scheme.

@@ -31,15 +31,15 @@ NOTE: Win/Super/kbd:[Meta]/Mod4 are the same key, it's usually between kbd:[LCtr
 * Open the help dialog (shows keybinds): kbd:[Meta] + kbd:[LShift] + kbd:[a] 
 
 == Tips 
-* If GNOME or KDE locks up/crashes, it's likely from a bad video driver such as VMWare SVGA (VMWare and VirtualBox's GPU).
-** GNOME: Logout of GNOME, pick a user, then click the gear to use "GNOME on Xorg". Or switch to TTY4 via kbd:[LCtrl + LAlt + F4] and edit `/etc/gdm/custom.conf` to disable Wayland.
+* If more performance is desired, then install `linux-xanmod` (latest) or `linux-xanmod-lts` (Long-Term Support) from the AUR.
+** Run `$ gpg2 --locate-keys torvalds@kernel.org gregkh@kernel.org` before attempting an install; note that your PC has to compile the kernel, so it will take around 10 minutes or up to hours depending on the CPU's speed.
 
 * Changing icon colors:
 ** Example: `# papirus-folders -C yaru`
 ** `# papirus-folders -l`: List all available colors.
 
 == Warnings
-* Avoid doing the following for Btrfs Assistant:
+* Avoid doing the following for Btrfs:
 ** Enabling quotas
 ** Deleting subvolumes
 

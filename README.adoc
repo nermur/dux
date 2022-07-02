@@ -17,7 +17,11 @@ NOTE: Skip to link:0.1_start.adoc[0.1_start.adoc] for installation.
 ** If convincing is needed, link:https://github.com/pbatard/rufus/wiki/FAQ#Why_do_I_need_to_disable_Secure_Boot_to_use_UEFINTFS[read this].
 * A >=3GB USB to flash a Manjaro ISO on.
 
+
 == Goals
+
+[%collapsible]
+====
 * *Resilience*
 ** A read-only Btrfs snapshot is made as a means of backup. Scripts that can be ran outside of `dux_installer.sh` backup every file/folder modified individually.
 ** The built-in ricing is ensured to not cause breakages in future updates for both GNOME and KDE.
@@ -49,15 +53,14 @@ NOTE: Skip to link:0.1_start.adoc[0.1_start.adoc] for installation.
 * Dux is by one man, and there won't be others with direct access to this repo for trust/security reasons.
 ** I have many different interests, and not enough time to juggle between them all.
 
+====
+
+
 == Notable features installed by Dux
 * `KDE` and `GNOME` desktop environments having an equal level of support/testing.
 
-* Virtual machine guest support
-** QEMU (multiple GPU drivers, such as QXL and Virtio), VMWare, Hyper-V, and VirtualBox.
-
-* Support for old to new NVIDIA, AMD, and Intel GPUs.
+* Support for old to new NVIDIA GPUs.
 ** Nouveau drivers can optionally be tweaked to be relatively stable without sacrificing speed (on a 650 Ti), which by default was very unstable.
-** Offloading tasks to a different GPU is also supported, even on NVIDIA.
 
 * Sharp and clear font rendering for low-DPI and high-DPI displays to emphasize readability.
 ** Websites or software that use Microsoft's fonts also look as intended.
@@ -84,11 +87,6 @@ https://github.com/systemd/systemd/issues/9725#issuecomment-564872011
 ** Have high-performance and deduplicated "snapshots" (backups) of key areas, which turns Manjaro updates breaking software into a small nuisance, as it's very quick and easy to restore to a previous snapshot.
 ** Allow for an easier data recovery if a disk gets damaged and/or starts to have bad sectors.
 ** To once a month automatically check (Scrub) over all filesystem data and metadata and verifying the checksums, repairing damage if present and possible.
-
-* `Snapper` instead of `Timeshift`
-** `Timeshift` is limited to taking snapshots of @ (root) and @home only.
-*** Taking snapshots encompassing all of @ (root) is very wasteful; Snapper specifically avoids directories that should never be snapshotted.
-** `Snapper` makes read-only and replicable snapshots, which `Timeshift` does not.
 
 * `I/O scheduling changes`
 ** `mq-deadline` for SSDs and eMMCs (flash/USB disks/SD cards), `bfq` for spinning disks (HDDs). +
@@ -120,6 +118,7 @@ This makes these types of storage highly responsive to your inputs.
 
 * `dbus-broker`
 ** Replaces `dbus-daemon` for the system bus, as it's faster and more stable.
+
 
 == Other Arch Linux installers
 

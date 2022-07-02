@@ -30,8 +30,5 @@ _other_user_files() {
 	\cp "${cp_flags}" "${GIT_DIR}"/files/home/.zsh_dux "/home/${WHICH_USER}/"
 }
 
-PKGS_AUR+="btrfs-assistant "
-_pkgs_aur_add
-
 _set_font_preferences
 _other_user_files

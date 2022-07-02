@@ -152,3 +152,7 @@ _systemctl enable --now ${SERVICES}
 [[ ${dolphin} -eq 1 ]] && _config_dolphin
 [[ ${obs_studio} -eq 1 ]] && _obs_autorun
 [[ ${nomachine} -eq 1 ]] && systemctl disable nxserver.service
+
+_cleanup() {
+	chown -R "${WHICH_USER}:${WHICH_USER}" "/home/${WHICH_USER}"
+}

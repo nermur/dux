@@ -31,11 +31,8 @@ _base_setup() {
     local PARAMS="intel_iommu=on iommu=pt"
     _modify_kernel_parameters
 
-    [[ ${REGENERATE_GRUB2_CONFIG} -eq 1 ]] &&
-        grub-mkconfig -o /boot/grub/grub.cfg
-
     # Don't use Copy-on-Write (CoW) for virtual machine disks.
-    chattr +C "/var/lib/libvirt/images"
+    chattr +C -R "/var/lib/libvirt/images"
 }
 
 _core_isolation() {
@@ -73,6 +70,9 @@ systemctl enable --now libvirtd.service &&
     virsh net-autostart default
 
 chmod +x -R "/etc/libvirt/hooks"
+
+[[ ${PARAMS_CHANGED} -eq 1 ]] &&
+    grub-mkconfig -o /boot/grub/grub.cfg
 
 whiptail --yesno "A reboot is required to complete installing virtual machine support.\nReboot now?" 0 0 &&
     reboot -f

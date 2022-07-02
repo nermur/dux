@@ -25,7 +25,7 @@ if lspci | grep -P "VGA|3D|Display" | grep -q "NVIDIA"; then
     HAS_NVIDIA_GPU=1
 fi
 
-if [[ ${HAS_NVIDIA_GPU} -eq 1 ]] && ((1 >= nvidia_driver_series <= 3)); then
+if [[ ${HAS_NVIDIA_GPU} -eq 1 ]] && [[ ${avoid_nvidia_gpus} -ne 1 ]]; then
     (bash "${GIT_DIR}/scripts/_NVIDIA.sh") |& tee "${GIT_DIR}/logs/_NVIDIA.log" || return
 else
     # Still ran inside _NVIDIA.sh
@@ -33,7 +33,7 @@ else
         grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
-systemctl mask systemd-resolved.service systemd-oomd.service
+systemctl mask systemd-oomd.service
 
 _cleanup() {
     # Do network changes last.

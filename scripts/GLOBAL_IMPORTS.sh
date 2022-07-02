@@ -28,12 +28,6 @@ fi
 [[ -z ${DATE:-} ]] &&
 	DATE=$(date +"%d-%m-%Y_%H-%M-%S") && export DATE
 
-if [[ ${bootloader_type} -eq 1 ]]; then
-	BOOT_CONF="/etc/default/grub" && export BOOT_CONF
-elif [[ ${bootloader_type} -eq 2 ]]; then
-	BOOT_CONF="/boot/refind_linux.conf" && export BOOT_CONF
-fi
-
 [[ -z ${FONT_SELECTION:-} ]] &&
 	FONT_SELECTION="noto-fonts noto-fonts-cjk noto-fonts-emoji ttf-hack ttf-liberation ttf-carlito ttf-caladea" &&
 	export FONT_SELECTION
@@ -154,14 +148,10 @@ if [[ ${DENY_SUPERUSER:-} -ne 1 && $(id -u) -eq 0 ]]; then
 		fi
 	}
 	_modify_kernel_parameters() {
+		local BOOT_CONF="/etc/default/grub"
 		if ! grep -q "${PARAMS}" "${BOOT_CONF}"; then
-			if [[ ${bootloader_type} -eq 1 ]]; then
-				sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=\"[^\"]*/& ${PARAMS}/" "${BOOT_CONF}"
-				REGENERATE_GRUB2_CONFIG=1
-			elif [[ ${bootloader_type} -eq 2 ]]; then
-				sed -i -e "s/standard options\"[ ]*\"[^\"]*/& ${PARAMS}/" \
-					-e "s/user mode\"[ ]*\"[^\"]*/& ${PARAMS}/" "${BOOT_CONF}"
-			fi
+			sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=\"[^\"]*/& ${PARAMS}/" "${BOOT_CONF}"
+			PARAMS_CHANGED=1
 		fi
 	}
 fi

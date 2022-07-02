@@ -8,7 +8,7 @@ source "${GIT_DIR}/scripts/GLOBAL_IMPORTS.sh"
 source "${GIT_DIR}/configs/settings.sh"
 
 if [[ ${IS_CHROOT} -eq 1 ]]; then
-    echo -e "\nERROR: Do not run this script inside a chroot!\n"
+	echo -e "\nERROR: Do not run this script inside a chroot!\n"
 	exit 1
 fi
 
@@ -23,6 +23,9 @@ PKGS+="kvantum qt6-svg qt5ct qt6ct papirus-icon-theme adw-gtk3 papirus-folders p
 
 [[ ${gnome_extension_appindicator} -eq 1 ]] &&
 	PKGS+="lib32-libappindicator-gtk2 lib32-libappindicator-gtk3 libappindicator-gtk2 libappindicator-gtk3 gnome-shell-extension-appindicator "
+
+[[ ${gnome_extension_pop_shell} -eq 1 ]] &&
+	PKGS+="gnome-shell-extension-pop-shell "
 
 _pkgs_add
 

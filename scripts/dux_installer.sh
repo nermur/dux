@@ -33,13 +33,8 @@ _repair_mkinitcpio() {
 }
 trap _repair_mkinitcpio EXIT
 
-_snapper_part1() {
-    ("${GIT_DIR}/scripts/snapper_part1.sh") |& tee "${GIT_DIR}/logs/snapper_part1.log"
-}
-_snapper_part1
-
 # Make a backup of the system now before touching anything else.
-snapper create -t single -d "Before Dux installation"
+#TODO replace with timeshift
 
 _01() {
     ("${GIT_DIR}/scripts/01-root.sh") |& tee "${GIT_DIR}/logs/01-root.log" || return
@@ -57,26 +52,21 @@ _pipewire() {
 _pipewire
 
 _gpu() {
-    [[ ${disable_gpu} -ne 1 ]] &&
+    [[ ${disable_gpu_tweaks} -ne 1 ]] &&
         ("${GIT_DIR}/scripts/GPU.sh") |& tee "${GIT_DIR}/logs/GPU.log" || return
 }
 _gpu
 
 if [[ ${XDG_SESSION_DESKTOP} = "GNOME" ]] && [[ ${auto_gnome_rice} -eq 1 ]]; then
-    ("${GIT_DIR}/scripts/rice_GNOME.sh") |& tee "${GIT_DIR}/logs/rice_GNOME.log"
+    ("${GIT_DIR}/scripts/rice_GNOME.sh") |& tee "${GIT_DIR}/logs/rice_GNOME.log" || return
 
     (sudo -H -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/non-SU/rice_GNOME_part2.sh") |& tee "${GIT_DIR}/logs/rice_GNOME_part2.log" || return
 
 elif [[ ${XDG_SESSION_DESKTOP} = "KDE" ]] && [[ ${automatic_kde_rice} -eq 1 ]]; then
-    ("${GIT_DIR}/scripts/rice_KDE.sh") |& tee "${GIT_DIR}/logs/rice_KDE.log"
+    ("${GIT_DIR}/scripts/rice_KDE.sh") |& tee "${GIT_DIR}/logs/rice_KDE.log" || return
 
     (sudo -H -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/non-SU/rice_KDE_part2.sh") |& tee "${GIT_DIR}/logs/rice_KDE_part2.log" || return
 fi
-
-_snapper_part2() {
-    ("${GIT_DIR}/scripts/snapper_part2.sh") |& tee "${GIT_DIR}/logs/snapper_part2.log" || return
-}
-_snapper_part2
 
 _03() {
     ("${GIT_DIR}/scripts/03-finalize.sh") |& tee "${GIT_DIR}/logs/03-finalize.log" || return

@@ -5,13 +5,6 @@ set -a
 # Supported printer list: https://www.openprinting.org/printers
 hardware_printers_and_scanners="1"
 
-# 1: GRUB2
-# 2: rEFInd
-bootloader_type="2"
-# If UEFI isn't available, GRUB2 is forced.
-[[ ! -d "/sys/firmware/efi" ]] &&
-    bootloader_type="1"
-
 # 0: Massive performance penalty on CPUs older than AMD Zen 2 or Intel 10th gen,
 # and caused a boot failure bug for Linux 5.18:
 # https://bugs.archlinux.org/task/74891?project=1&pagenum=1
@@ -83,13 +76,11 @@ auto_kde_rice="1"
     kwin_shadow_size="ShadowNone"
 
 # === Graphics Card options ===
-# 1: Skip installing any and all GPU software.
-disable_gpu="0"
-
-# 1: Disable installing drivers for NVIDIA GPUs.
+# 1: Skip installing NVIDIA drivers if a NVIDIA GPU was detected.
 avoid_nvidia_gpus="0"
-avoid_intel_gpus="0"
-avoid_amd_gpus="0"
+
+# 1: Disables all the GPU tweaks below.
+disable_gpu_tweaks="0"
 
 # 1: Proprietary current
 # 2: Proprietary 470.xxx

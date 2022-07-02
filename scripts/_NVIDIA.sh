@@ -80,7 +80,6 @@ _nvidia_setup() {
 
 		# Xorg will break on trying to load Nouveau first if this file exists
 		[[ -e "/etc/X11/xorg.conf.d/20-nouveau.conf" ]] &&
-			chattr -f -i /etc/X11/xorg.conf.d/20-nouveau.conf &&
 			rm -f /etc/X11/xorg.conf.d/20-nouveau.conf
 
 		REGENERATE_INITRAMFS=1
@@ -113,14 +112,13 @@ case ${nvidia_driver_series} in
 esac
 
 _pkgs_add
-_pkgs_aur_add || :
 _flatpaks_add || :
 
 if [[ ${IS_CHROOT} -eq 0 ]]; then
 	[[ ${REGENERATE_INITRAMFS} -eq 1 ]] &&
 		_build_initramfs
 
-	[[ ${REGENERATE_GRUB2_CONFIG} -eq 1 ]] &&
+	[[ ${PARAMS_CHANGED} -eq 1 ]] &&
 		grub-mkconfig -o /boot/grub/grub.cfg
 fi
 

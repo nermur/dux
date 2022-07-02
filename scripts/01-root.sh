@@ -36,8 +36,8 @@ echo "%wheel ALL=(ALL) NOPASSWD: ALL" >/etc/sudoers.d/custom_settings
 mkdir "${mkdir_flags}" {/etc/{modules-load.d,NetworkManager/conf.d,modprobe.d,tmpfiles.d,pacman.d/hooks,X11,fonts,systemd/user,conf.d},/boot,/home/"${WHICH_USER}"/.config/{fontconfig/conf.d,systemd/user},/usr/share/libalpm/scripts}
 
 if [[ ${auto_remove_software} -eq 1 ]]; then
-	REMOVE_PKGS+="kcalc okular gwenview ksystemlog plasma-systemmonitor "
-	_remove_installed_pkgs
+    REMOVE_PKGS+="kcalc okular gwenview ksystemlog plasma-systemmonitor "
+    _remove_installed_pkgs
 fi
 
 _package_installers() {
@@ -56,18 +56,14 @@ _package_installers() {
     [[ ${hardware_fingerprint_reader} -eq 1 ]] &&
         PKGS+="fprintd imagemagick "
 
-    [[ ${bootloader_type} -eq 2 ]] &&
-        PKGS+="memtest86-efi refind refind-theme-maia "
-    [[ -d "/sys/firmware/efi" ]] &&
-        PKGS+="efibootmgr "
-
     PKGS+="gnome-logs dconf-editor flatpak gsettings-desktop-schemas xdg-desktop-portal xdg-desktop-portal-gtk ibus \
     kconfig \
     iwd bluez bluez-utils \
     irqbalance zram-generator power-profiles-daemon thermald dbus-broker gamemode lib32-gamemode \
     libnewt pigz pbzip2 strace usbutils avahi nss-mdns \
     man-db man-pages pacman-contrib bat \
-    trash-cli rebuild-detector base-devel "
+    trash-cli rebuild-detector base-devel \
+    grub grub-btrfs "
     _pkgs_add
 }
 
@@ -77,11 +73,6 @@ _config_dolphin() {
         kwriteconfig5 --file "${CONF}" --group "General" --key "ShowFullPath" "true"
         kwriteconfig5 --file "${CONF}" --group "General" --key "ShowSpaceInfo" "false"
         kwriteconfig5 --file "/home/${WHICH_USER}/.config/kdeglobals" --group "PreviewSettings" --key "MaximumRemoteSize" "10485760"
-    fi
-
-    if hash balooctl >&/dev/null; then
-        balooctl suspend
-        balooctl disable
     fi
 }
 
@@ -129,54 +120,30 @@ _bootloader_setup() {
     # acpi_osi=Linux: tell BIOS to load their ACPI tables for Linux.
     COMMON_PARAMS="loglevel=3 sysrq_always_enabled=1 quiet add_efi_memmap acpi_osi=Linux nmi_watchdog=0 skew_tick=1 mce=ignore_ce nosoftlockup ${MICROCODE:-}"
 
-    if [[ ${bootloader_type} -eq 1 ]]; then
-        _setup_grub2_bootloader() {
-            if [[ $(</sys/firmware/efi/fw_platform_size) -eq 64 ]]; then
-                grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Manjaro
-            elif [[ $(</sys/firmware/efi/fw_platform_size) -eq 32 ]]; then
-                grub-install --target=i386-efi --efi-directory=/boot --bootloader-id=Manjaro
-            else
-                grub-install --target=i386-pc "${BOOT_PART//[0-9]/}"
-            fi
-        }
-        _grub2_bootloader_config() {
-            sed -i -e "s/.GRUB_CMDLINE_LINUX/GRUB_CMDLINE_LINUX/" \
-                -e "s/.GRUB_CMDLINE_LINUX_DEFAULT/GRUB_CMDLINE_LINUX_DEFAULT/" \
-                -e "s/.GRUB_DISABLE_OS_PROBER/GRUB_DISABLE_OS_PROBER/" \
-                "${BOOT_CONF}" # can't allow these to be commented out
+    _setup_grub2_bootloader() {
+        if [[ $(</sys/firmware/efi/fw_platform_size) -eq 64 ]]; then
+            grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Manjaro
+        elif [[ $(</sys/firmware/efi/fw_platform_size) -eq 32 ]]; then
+            grub-install --target=i386-efi --efi-directory=/boot --bootloader-id=Manjaro
+        else
+            grub-install --target=i386-pc "${BOOT_PART//[0-9]/}"
+        fi
+    }
 
-            sed -i -e "s|GRUB_CMDLINE_LINUX=.*|GRUB_CMDLINE_LINUX=\"${MITIGATIONS_OFF:-} ${REQUIRED_PARAMS}\"|" \
-                -e "s|GRUB_CMDLINE_LINUX_DEFAULT=.*|GRUB_CMDLINE_LINUX_DEFAULT=\"${COMMON_PARAMS}\"|" \
-                -e "s|GRUB_DISABLE_OS_PROBER=.*|GRUB_DISABLE_OS_PROBER=false|" \
-                "${BOOT_CONF}"
-        }
-        _setup_grub2_bootloader
-        _grub2_bootloader_config
+    _grub2_bootloader_config() {
+        sed -i -e "s/.GRUB_CMDLINE_LINUX/GRUB_CMDLINE_LINUX/" \
+            -e "s/.GRUB_CMDLINE_LINUX_DEFAULT/GRUB_CMDLINE_LINUX_DEFAULT/" \
+            -e "s/.GRUB_DISABLE_OS_PROBER/GRUB_DISABLE_OS_PROBER/" \
+            "${BOOT_CONF}" # can't allow these to be commented out
 
-    elif [[ ${bootloader_type} -eq 2 ]]; then
-        _setup_refind_bootloader() {
-            # x86_64-efi: rEFInd overrides GRUB2 without issues.
-            refind-install
-            # Tell rEFInd to detect the initramfs for linux-lts & linux automatically.
-            sed -i 's/.extra_kernel_version_strings/extra_kernel_version_strings/' \
-            -e "s/extra_kernel_version_strings.*/extra_kernel_version_strings linux-lts,linux,linux-tkg-upds,linux-tkg-pds,linux-tkg-bmq,linux-tkg-muqss,linux-tkg-cacule,linux-tkg-cfs" /boot/efi/EFI/refind/refind.conf
-
-            \cp "${cp_flags}" "${GIT_DIR}"/files/etc/pacman.d/hooks/refind.hook "/etc/pacman.d/hooks/"
-        }
-        _refind_bootloader_config() {
-            cat <<EOF >"${BOOT_CONF}"
-"Boot using standard options"  "${MITIGATIONS_OFF:-} ${REQUIRED_PARAMS} ${COMMON_PARAMS}"
-
-"Boot to single-user mode"  "single ${MITIGATIONS_OFF:-} ${REQUIRED_PARAMS} ${COMMON_PARAMS}"
-
-"Boot with minimal options"  "${MITIGATIONS_OFF:-} ${REQUIRED_PARAMS} ${MICROCODE:-}"
-EOF
-        }
-        _setup_refind_bootloader
-        _refind_bootloader_config
-    fi
+        sed -i -e "s|GRUB_CMDLINE_LINUX=.*|GRUB_CMDLINE_LINUX=\"${MITIGATIONS_OFF:-} ${REQUIRED_PARAMS}\"|" \
+            -e "s|GRUB_CMDLINE_LINUX_DEFAULT=.*|GRUB_CMDLINE_LINUX_DEFAULT=\"${COMMON_PARAMS}\"|" \
+            -e "s|GRUB_DISABLE_OS_PROBER=.*|GRUB_DISABLE_OS_PROBER=false|" \
+            "${BOOT_CONF}"
+    }
+    _setup_grub2_bootloader
+    _grub2_bootloader_config
 }
-
 _system_configuration() {
     # gamemode: Allows for maximum performance while a specific program is running.
     groupadd --force -g 385 gamemode
@@ -208,9 +175,17 @@ _system_configuration() {
     \cp "${cp_flags}" "${GIT_DIR}"/files/etc/X11/Xwrapper.config "/etc/X11/"
 
     if ! grep -q 'PRUNENAMES = ".snapshots"' /etc/updatedb.conf >&/dev/null; then
-        # Tells mlocate to ignore Snapper's Btrfs snapshots; avoids slowdowns and excessive memory usage.
+        # Tells mlocate to ignore Btrfs snapshots; avoids slowdowns and excessive memory usage.
         printf 'PRUNENAMES = ".snapshots"' >>/etc/updatedb.conf
     fi
+
+    # Disable the Baloo indexer.
+    if hash balooctl >&/dev/null; then
+        balooctl suspend
+        balooctl disable
+    fi
+    kwriteconfig5 --file "/home/${WHICH_USER}/.config/baloofilerc" --group "Basic Settings" --key "Indexing-Enabled" "false"
+    chattr -f +i "/home/${WHICH_USER}/.config/baloofilerc"
 
     # Disables late microcode updates, which Linux 5.19 defaults to doing:
     # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9784edd73a08ea08d0ce5606e1f0f729df688c59
@@ -252,10 +227,22 @@ _system_configuration() {
     chsh -s /bin/zsh
 }
 
+_grub_btrfs_pacman_hook() {
+    # GRUB_BTRFS_LIMIT="10": Don't display more than 10 snapshots.
+    # GRUB_BTRFS_SHOW_SNAPSHOTS_FOUND="false": Don't specify every snapshot found, instead say "Found 10 snapshot(s)".
+    # GRUB_BTRFS_SHOW_TOTAL_SNAPSHOTS_FOUND="true": Required to say "Found 10 snapshot(s)".
+    sed -i -e "s/.GRUB_BTRFS_LIMIT/GRUB_BTRFS_LIMIT/" -e "s/.GRUB_BTRFS_SHOW_SNAPSHOTS_FOUND/GRUB_BTRFS_SHOW_SNAPSHOTS_FOUND/" -e "s/.GRUB_BTRFS_SHOW_TOTAL_SNAPSHOTS_FOUND/GRUB_BTRFS_SHOW_TOTAL_SNAPSHOTS_FOUND/" \
+        -e "s/GRUB_BTRFS_LIMIT.*/GRUB_BTRFS_LIMIT=\"10\"/" \
+        -e "s/GRUB_BTRFS_SHOW_SNAPSHOTS_FOUND.*/GRUB_BTRFS_SHOW_SNAPSHOTS_FOUND=\"false\"/" \
+        -e "s/GRUB_BTRFS_SHOW_TOTAL_SNAPSHOTS_FOUND.*/GRUB_BTRFS_SHOW_TOTAL_SNAPSHOTS_FOUND=\"true\"/" \
+        "/etc/default/grub-btrfs/config"
+}
+
 _package_installers
 _config_dolphin
 _bootloader_setup
 _system_configuration
+_grub_btrfs_pacman_hook
 
 # Default services, regardless of options selected.
 SERVICES+="fstrim.timer btrfs-scrub@-.timer \
