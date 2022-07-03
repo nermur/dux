@@ -47,8 +47,6 @@ _package_installers() {
         # Also requires avahi-daemon.service; enabled by default.
         SERVICES+="cups.socket cups-browsed.service "
     fi
-    [[ ${hardware_fingerprint_reader} -eq 1 ]] &&
-        PKGS+="fprintd imagemagick "
 
     PKGS+="gnome-logs dconf-editor flatpak gsettings-desktop-schemas xdg-desktop-portal xdg-desktop-portal-gtk ibus \
     kconfig \
@@ -99,9 +97,15 @@ _bootloader_setup() {
         REQUIRED_PARAMS="root=/dev/disk/by-partuuid/${ROOT_PART} rootflags=subvol=@ rw"
     fi
 
-    # https://access.redhat.com/sites/default/files/attachments/201501-perf-brief-low-latency-tuning-rhel7-v1.1.pdf
+    # https://www.kernel.org/doc/Documentation/x86/x86_64/boot-options.txt
+    #
+    # https://www.intel.com/content/www/us/en/developer/articles/technical/optimizing-computer-applications-for-latency-part-1-configuring-the-hardware.html
+    #
+    # http://developer.amd.com/wp-content/resources/56263-Performance-Tuning-Guidelines-PUB.pdf
+    #
+    # loglevel=3: silence more of the boot process graphically; info will still be in logs.
     # acpi_osi=Linux: tell BIOS to load their ACPI tables for Linux.
-    COMMON_PARAMS="loglevel=3 sysrq_always_enabled=1 quiet add_efi_memmap acpi_osi=Linux nmi_watchdog=0 skew_tick=1 mce=ignore_ce nosoftlockup"
+    COMMON_PARAMS="loglevel=3 sysrq_always_enabled=1 quiet add_efi_memmap acpi_osi=Linux skew_tick=1 mce=ignore_ce nowatchdog tsc=reliable"
 
     _setup_grub2_bootloader() {
         if [[ $(</sys/firmware/efi/fw_platform_size) -eq 64 ]]; then

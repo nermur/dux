@@ -24,6 +24,10 @@ endif::[]
 ** Shows detailed information of a loaded kernel module.
 
 == Potential solutions
+* Boot issues/lockups
+. Hold kbd:[ESC] while booting, this will show GRUB2's menus.
+. From here you can remove kernel parameters which are set. The first to remove is `tsc=reliable`, then try removing the others along with that.
+
 * If GNOME or KDE locks up/crashes, it's likely from a bad video driver such as VMWare SVGA (VMWare and VirtualBox's GPU).
 ** GNOME: Logout of GNOME, pick a user, then click the gear to use "GNOME on Xorg". Or switch to TTY4 via kbd:[LCtrl + LAlt + F4] and edit `/etc/gdm/custom.conf` to disable Wayland.
 

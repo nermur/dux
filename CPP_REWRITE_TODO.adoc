@@ -1,2 +1,5 @@
 * ROOT FILE OPERATIONS
 ** If a file is detected as immutable, mark it as mutable before doing anything with it.
+
+* Detect the correct kernel for initramfs generation
+** Also switch from `mkinitcpio` to `Booster` to depend less on Bash (unsafe/unpredictable) scripts for critical areas.
