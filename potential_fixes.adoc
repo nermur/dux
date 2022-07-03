@@ -11,7 +11,7 @@ endif::[]
 
 == Pinpointing system problems
 * `# dmesg -H`
-** Outputs the kernel ring buffer, useful for seeing what occurred at ring0 for the current boot.
+** Outputs the kernel ring buffer, useful for seeing what occurred at ring0 (kernel-level) for the current boot.
 
 * `$ ldd executable_name` 
 ** Prints required shared libraries for the specified executable, useful for tracking down required dependencies.

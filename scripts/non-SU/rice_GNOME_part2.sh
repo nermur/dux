@@ -19,8 +19,11 @@ fc-cache -f
 _set_configs() {
 	mkdir "${mkdir_flags}" /home/"${WHICH_USER}"/.config/{environment.d,gtk-3.0,gtk-4.0,Kvantum,qt5ct,qt6ct}
 
-	[[ ${gnome_no_titlebars} -eq 1 ]] &&
+	if [[ ${gnome_no_titlebars} -eq 1 ]]; then
 		\cp "${cp_flags}" "${GIT_DIR}"/files/home/.config/gtk-3.0/gtk.css "/home/${WHICH_USER}/.config/gtk-3.0/"
+		gsettings set org.gnome.desktop.wm.preferences titlebar-uses-system-font "false"
+		gsettings set org.gnome.desktop.wm.preferences titlebar-font ""
+	fi
 
 	\cp "${cp_flags}" "${GIT_DIR}"/files/home/.gtkrc-2.0 "/home/${WHICH_USER}/"
 	\cp "${cp_flags}" "${GIT_DIR}"/files/home/.config/environment.d/gnome.conf "/home/${WHICH_USER}/.config/environment.d/"

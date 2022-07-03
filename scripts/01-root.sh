@@ -36,7 +36,8 @@ echo "%wheel ALL=(ALL) NOPASSWD: ALL" >/etc/sudoers.d/custom_settings
 mkdir "${mkdir_flags}" {/etc/{modules-load.d,NetworkManager/conf.d,modprobe.d,tmpfiles.d,pacman.d/hooks,X11,fonts,systemd/user,conf.d},/boot,/home/"${WHICH_USER}"/.config/{fontconfig/conf.d,systemd/user},/usr/share/libalpm/scripts}
 
 if [[ ${auto_remove_software} -eq 1 ]]; then
-    REMOVE_PKGS+="kcalc okular gwenview ksystemlog plasma-systemmonitor "
+    REMOVE_PKGS+="kcalc okular gwenview ksystemlog plasma-systemmonitor \
+    totem gthumb "
     _remove_installed_pkgs
 fi
 
