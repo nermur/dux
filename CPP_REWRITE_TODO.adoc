@@ -1,0 +1,2 @@
+* ROOT FILE OPERATIONS
+** If a file is detected as immutable, mark it as mutable before doing anything with it.

@@ -76,9 +76,6 @@ auto_kde_rice="1"
     kwin_shadow_size="ShadowNone"
 
 # === Graphics Card options ===
-# 1: Skip installing NVIDIA drivers if a NVIDIA GPU was detected.
-avoid_nvidia_gpus="0"
-
 # 1: Disables all the GPU tweaks below.
 disable_gpu_tweaks="0"
 
@@ -89,6 +86,7 @@ disable_gpu_tweaks="0"
 # Warning: Non open-source drivers can cause Linux to fail booting; check if the Linux kernel used is compatible!
 nvidia_driver_series="1"
 
+no_nvidia_tweaks="0"
 case ${nvidia_driver_series} in
 [1-3])
     # Enforce "Prefer Maximum Performance" (some GPUs lag hard without this).
@@ -99,6 +97,9 @@ case ${nvidia_driver_series} in
 
     # https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__MEMOP.html#group__CUDA__MEMOP
     nvidia_stream_memory_operations="0"
+
+    # Allows adjusting clocks and voltages (over/under-clocking & over/under-volting).
+    nvidia_sysfs="1"
     ;;
 4)
     # Increases stability and performance for Nouveau drivers.

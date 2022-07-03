@@ -9,21 +9,17 @@ ifdef::env-github[]
 endif::[]
 :imagesdir: imgs/
 
-. After finished rebooting:
-** Open "Konsole".
-. Configure `~/dux/configs/optional_software.sh` with a text editor of your choice.
-** After done configuring, run: +
-`# sudo bash ~/dux/scripts/software_catalog.sh`
+. After finished rebooting, open your terminal emulator, likely "Terminal" or "Konsole".
+. Run `# sudo mkinitcpio -P`.
+. Reboot.
+
+NOTE: Anything to do with DKMS/initramfs/modprobe currently isn't called directly by Dux. +
+It will be in Dux's C++ rewrite.
 
 == Terminal commands
 * Package manager:
 ** `$ paru -Syu`: Update all non-AUR and AUR packages
 ** `# pacman -Syu`: Update all non-AUR packages
-
-* [UEFI only] If you installed rEFInd bootloader and wish to uninstall GRUB:
-** `# efibootmgr --delete-bootnum -b $(efibootmgr | grep Manjaro | grep -Eo "[0-9]{1,4}")`
-** `# pacman -Rnsc grub`
-** `# rm -rf /boot/{grub,efi/EFI/Manjaro,efi/EFI/boot}`
 
 == Graphical environments
 NOTE: Win/Super/kbd:[Meta]/Mod4 are the same key, it's usually between kbd:[LCtrl] and kbd:[LAlt].
@@ -32,6 +28,7 @@ NOTE: Win/Super/kbd:[Meta]/Mod4 are the same key, it's usually between kbd:[LCtr
 
 == Tips 
 * If more performance is desired, then install `linux-xanmod-edge` (latest) or `linux-xanmod-lts` (Long-Term Support) from the AUR.
+** NOTE: For NVIDIA, install `nvidia-dkms`. For 470 drivers it'd be `nvidia-470xx-dkms`; 390 drivers are `nvidia-390xx-dkms`.
 ** Run `$ gpg2 --locate-keys torvalds@kernel.org gregkh@kernel.org` before attempting an install; note that your PC has to compile the kernel, so it will take around 10 minutes or up to hours depending on the CPU's speed.
 
 * Changing icon colors:

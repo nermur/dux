@@ -10,28 +10,8 @@ source "${GIT_DIR}/configs/settings.sh"
 
 clear
 
-VARIANT=$(uname -r | awk -F. '{print $1$2}')
-
-# Now is the right time to generate a initramfs.
+# Undo the masked Pacman hooks for initramfs.
 pacman -S --quiet --noconfirm --ask=4 --overwrite="*" mkinitcpio
-
-PKGS+="dkms linux${VARIANT}-headers "
-_pkgs_add
-pacman -S --quiet --noconfirm --ask=4 "linux${VARIANT}"
-
-_build_initramfs
-
-if lspci | grep -P "VGA|3D|Display" | grep -q "NVIDIA"; then
-    HAS_NVIDIA_GPU=1
-fi
-
-if [[ ${HAS_NVIDIA_GPU} -eq 1 ]] && [[ ${avoid_nvidia_gpus} -ne 1 ]]; then
-    (bash "${GIT_DIR}/scripts/_NVIDIA.sh") |& tee "${GIT_DIR}/logs/_NVIDIA.log" || return
-else
-    # Still ran inside _NVIDIA.sh
-    [[ ${bootloader_type} -eq 1 ]] &&
-        grub-mkconfig -o /boot/grub/grub.cfg
-fi
 
 systemctl mask systemd-oomd.service
 

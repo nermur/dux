@@ -121,9 +121,6 @@ fi
 
 # Functions requiring superuser
 if [[ ${DENY_SUPERUSER:-} -ne 1 && $(id -u) -eq 0 ]]; then
-	_build_initramfs() {
-		mkinitcpio -p "linux$(uname -r | awk -F. '{print $1$2}')"
-	}
 	_pkgs_add() {
 		# If ${PKGS} is empty, don't bother doing anything.
 		[[ -n ${PKGS} ]] &&

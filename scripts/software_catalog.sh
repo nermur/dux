@@ -75,10 +75,14 @@ fi
 
 if [[ ${obs_studio} -eq 1 ]]; then
 	# v4l2loopback = for Virtual Camera; a good universal way to screenshare.
-	PKGS+="obs-studio v4l2loopback-dkms "
-	if hash pipewire >&/dev/null; then
-		PKGS+="pipewire-v4l2 lib32-pipewire-v4l2 "
-	fi
+	PKGS+="obs-studio "
+
+	# Not allowed to touch kernel headers until the C++ Dux rewrite!
+	# "v4l2loopback-dkms "
+	#if hash pipewire >&/dev/null; then
+	#	PKGS+="pipewire-v4l2 lib32-pipewire-v4l2 "
+	#fi
+
 	# Autostart OBS to make it a sort of NVIDIA ShadowPlay or AMD ReLive.
 	_obs_autorun() {
 		sudo -H -u "${WHICH_USER}" bash -c "${SYSTEMD_USER_ENV} DENY_SUPERUSER=1 cp ${cp_flags} ${GIT_DIR}/files/home/.config/systemd/user/obs-studio.service /home/${WHICH_USER}/.config/systemd/user/"

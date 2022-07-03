@@ -6,4 +6,4 @@ After=display-manager.service
 ExecStart=/usr/bin/obs --minimize-to-tray
 
 [Install]
-WantedBy=autostart.target
+After=graphical.target
