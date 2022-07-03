@@ -46,12 +46,6 @@ _package_installers() {
         PKGS+="cups cups-filters ghostscript gsfonts cups-pk-helper sane system-config-printer simple-scan "
         # Also requires avahi-daemon.service; enabled by default.
         SERVICES+="cups.socket cups-browsed.service "
-        _printer_config() {
-            chattr -f -i /etc/nsswitch.conf
-            sed -i "s/hosts:.*/hosts: files mymachines myhostname mdns_minimal [NOTFOUND=return] resolve/" /etc/nsswitch.conf
-            chattr -f +i /etc/nsswitch.conf
-        }
-        trap _printer_config EXIT
     fi
     [[ ${hardware_fingerprint_reader} -eq 1 ]] &&
         PKGS+="fprintd imagemagick "
@@ -67,24 +61,13 @@ _package_installers() {
     _pkgs_add
 }
 
-_config_dolphin() {
-    if hash dolphin >&/dev/null; then
-        local CONF="/home/${WHICH_USER}/.config/dolphinrc"
-        kwriteconfig5 --file "${CONF}" --group "General" --key "ShowFullPath" "true"
-        kwriteconfig5 --file "${CONF}" --group "General" --key "ShowSpaceInfo" "false"
-        kwriteconfig5 --file "/home/${WHICH_USER}/.config/kdeglobals" --group "PreviewSettings" --key "MaximumRemoteSize" "10485760"
-    fi
-}
-
 _bootloader_setup() {
     case $(systemd-detect-virt) in
     "none")
         if [[ ${CPU_VENDOR} = "AuthenticAMD" ]]; then
             PKGS+="amd-ucode "
-            MICROCODE="initrd=/@/boot/amd-ucode.img initrd=/@/boot/initramfs-%v.img"
         elif [[ ${CPU_VENDOR} = "GenuineIntel" ]]; then
             PKGS+="intel-ucode "
-            MICROCODE="initrd=/@/boot/intel-ucode.img initrd=/@/boot/initramfs-%v.img"
         fi
         ;;
     "kvm")
@@ -118,13 +101,13 @@ _bootloader_setup() {
 
     # https://access.redhat.com/sites/default/files/attachments/201501-perf-brief-low-latency-tuning-rhel7-v1.1.pdf
     # acpi_osi=Linux: tell BIOS to load their ACPI tables for Linux.
-    COMMON_PARAMS="loglevel=3 sysrq_always_enabled=1 quiet add_efi_memmap acpi_osi=Linux nmi_watchdog=0 skew_tick=1 mce=ignore_ce nosoftlockup ${MICROCODE:-}"
+    COMMON_PARAMS="loglevel=3 sysrq_always_enabled=1 quiet add_efi_memmap acpi_osi=Linux nmi_watchdog=0 skew_tick=1 mce=ignore_ce nosoftlockup"
 
     _setup_grub2_bootloader() {
         if [[ $(</sys/firmware/efi/fw_platform_size) -eq 64 ]]; then
-            grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Manjaro
+            grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Manjaro
         elif [[ $(</sys/firmware/efi/fw_platform_size) -eq 32 ]]; then
-            grub-install --target=i386-efi --efi-directory=/boot --bootloader-id=Manjaro
+            grub-install --target=i386-efi --efi-directory=/boot/efi --bootloader-id=Manjaro
         else
             grub-install --target=i386-pc "${BOOT_PART//[0-9]/}"
         fi
@@ -157,7 +140,9 @@ _system_configuration() {
 
     # Why 'noatime': https://archive.is/wjH73
     sed 's/,defaults 0 0/,defaults,noatime,compress=zstd:1 0 0/' /etc/fstab
-    echo -e "# Some useful configuration is gone if this isn't mounted\ndebugfs    /sys/kernel/debug      debugfs  defaults  0 0" >>/etc/fstab
+    if ! grep -q "/sys/kernel/debug" /etc/fstab >&/dev/null; then
+        echo -e "# Some useful configuration is gone if this isn't mounted\ndebugfs    /sys/kernel/debug      debugfs  defaults  0 0" >>/etc/fstab
+    fi
 
     sed -i -e "s/-march=x86-64 -mtune=generic/-march=${MARCH} -mtune=${MARCH}/" \
         -e 's/.RUSTFLAGS.*/RUSTFLAGS="-C opt-level=2 -C target-cpu=native"/' \
@@ -184,8 +169,6 @@ _system_configuration() {
         balooctl suspend
         balooctl disable
     fi
-    kwriteconfig5 --file "/home/${WHICH_USER}/.config/baloofilerc" --group "Basic Settings" --key "Indexing-Enabled" "false"
-    chattr -f +i "/home/${WHICH_USER}/.config/baloofilerc"
 
     # Disables late microcode updates, which Linux 5.19 defaults to doing:
     # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9784edd73a08ea08d0ce5606e1f0f729df688c59
@@ -239,7 +222,6 @@ _grub_btrfs_pacman_hook() {
 }
 
 _package_installers
-_config_dolphin
 _bootloader_setup
 _system_configuration
 _grub_btrfs_pacman_hook
@@ -252,9 +234,7 @@ irqbalance.service dbus-broker.service power-profiles-daemon.service thermald.se
 _systemctl enable ${SERVICES}
 
 _prepare_02() {
-    # Syntax errors in /etc/nsswitch.conf will break /etc/passwd, /etc/group, and /etc/hosts (breaking the whole OS until repaired).
-    chattr -f +i /etc/nsswitch.conf
-    chown -R "${WHICH_USER}:${WHICH_USER}" "/home/${WHICH_USER}"
+    chown -R "${WHICH_USER}:${WHICH_USER}" "/home/${WHICH_USER}" || :
     chmod +x -R "${GIT_DIR}" >&/dev/null || :
 }
 trap _prepare_02 EXIT

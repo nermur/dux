@@ -39,7 +39,7 @@ auto_gnome_rice="1"
     # Support for tray icons.
     gnome_extension_appindicator="1"
     # Recommended to use alongside 'gnome_no_titlebars'.
-    gnome_extension_pop_shell="0"
+    gnome_extension_pop_shell="1"
     
     # Don't automatically turn off the screen.
     gnome_disable_idle="1"

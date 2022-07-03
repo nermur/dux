@@ -53,6 +53,9 @@ if [[ ${dolphin} -eq 1 ]]; then
 		kwriteconfig5 --file "${CONF}" --group "General" --key "ShowFullPath" "true"
 		kwriteconfig5 --file "${CONF}" --group "General" --key "ShowSpaceInfo" "false"
 		kwriteconfig5 --file "/home/${WHICH_USER}/.config/kdeglobals" --group "PreviewSettings" --key "MaximumRemoteSize" "10485760"
+		# Disable the Baloo indexer.
+		balooctl suspend
+		balooctl disable
 	}
 fi
 
@@ -116,9 +119,6 @@ fi
 
 [[ ${github_desktop} -eq 1 ]] &&
 	PKGS_AUR+="github-desktop-bin "
-
-[[ ${solanum} -eq 1 ]] &&
-	FLATPAKS+="org.gnome.Solanum "
 
 if [[ ${cxx_toolbox} -eq 1 ]]; then
 	PKGS+="gdb gperftools valgrind pwndbg rz-cutter rz-ghidra "

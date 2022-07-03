@@ -34,7 +34,8 @@ _repair_mkinitcpio() {
 trap _repair_mkinitcpio EXIT
 
 # Make a backup of the system now before touching anything else.
-#TODO replace with timeshift
+pacman -S --quiet --noconfirm --ask=4 --needed timeshift timeshift-autosnap-manjaro
+timeshift --create --comments "Before applying Dux"
 
 _01() {
     ("${GIT_DIR}/scripts/01-root.sh") |& tee "${GIT_DIR}/logs/01-root.log" || return
@@ -42,7 +43,7 @@ _01() {
 _01
 
 _02() {
-    (sudo -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/02-nonroot.sh") |& tee "${GIT_DIR}/logs/02-nonroot.sh" || return
+    (sudo -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/02-nonroot.sh") |& tee "${GIT_DIR}/logs/02-nonroot.log" || return
 }
 _02
 
@@ -72,6 +73,13 @@ _03() {
     ("${GIT_DIR}/scripts/03-finalize.sh") |& tee "${GIT_DIR}/logs/03-finalize.log" || return
 }
 _03
+
+# OBS Studio installer depends on kernel headers being present, thus it's past _03.
+_software_catalog(){
+    [[ ${auto_software_catalog} -eq 1 ]] &&
+        ("${GIT_DIR}/scripts/software_catalog.sh") |& tee "${GIT_DIR}/logs/software_catalog.log" || return
+}
+_software_catalog
 
 whiptail --yesno "A reboot is required to complete installation.\nAfter rebooting, read through 0.3_booted.adoc.\nReboot now?" 0 0 &&
     reboot -f

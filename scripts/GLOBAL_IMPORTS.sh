@@ -36,6 +36,9 @@ fi
 	SYSTEMD_USER_ENV="DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus XDG_RUNTIME_DIR=/run/user/1000" &&
 	export SYSTEMD_USER_ENV
 
+[[ -z ${BOOT_CONF:-} ]] &&
+	BOOT_CONF="/etc/default/grub" && export BOOT_CONF
+
 if systemd-detect-virt --chroot >&/dev/null; then
 	IS_CHROOT=1
 fi
@@ -148,7 +151,6 @@ if [[ ${DENY_SUPERUSER:-} -ne 1 && $(id -u) -eq 0 ]]; then
 		fi
 	}
 	_modify_kernel_parameters() {
-		local BOOT_CONF="/etc/default/grub"
 		if ! grep -q "${PARAMS}" "${BOOT_CONF}"; then
 			sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=\"[^\"]*/& ${PARAMS}/" "${BOOT_CONF}"
 			PARAMS_CHANGED=1

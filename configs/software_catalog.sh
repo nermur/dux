@@ -85,9 +85,6 @@ task_manager="1"
 # Video game helpers: GOverlay, MangoHUD, Lutris.
 vg_toolbox="1"
 
-# A Pomodoro Timer; helps keep time in your control.
-solanum="1"
-
 # Spaced repetition flashcards, to remember learning material effectively.
 # Required reading: https://docs.ankiweb.net/background.html
 anki="1"

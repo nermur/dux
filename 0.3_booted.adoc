@@ -31,7 +31,7 @@ NOTE: Win/Super/kbd:[Meta]/Mod4 are the same key, it's usually between kbd:[LCtr
 * Open the help dialog (shows keybinds): kbd:[Meta] + kbd:[LShift] + kbd:[a] 
 
 == Tips 
-* If more performance is desired, then install `linux-xanmod` (latest) or `linux-xanmod-lts` (Long-Term Support) from the AUR.
+* If more performance is desired, then install `linux-xanmod-edge` (latest) or `linux-xanmod-lts` (Long-Term Support) from the AUR.
 ** Run `$ gpg2 --locate-keys torvalds@kernel.org gregkh@kernel.org` before attempting an install; note that your PC has to compile the kernel, so it will take around 10 minutes or up to hours depending on the CPU's speed.
 
 * Changing icon colors:
