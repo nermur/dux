@@ -21,11 +21,11 @@ elif [[ -z ${ROOT_PART} ]]; then
 fi
 
 if [[ ! -d "/sys/firmware/efi" ]]; then
-    GET_BOOT=$(\df /boot | grep /dev | cut -f1 -d' ')
+    BOOT_PART=$(\df /boot | grep / | cut -f1 -d' ')
 else
     GET_BOOT=$(\df /boot/efi | grep /dev | cut -f1 -d' ')
+    BOOT_PART=$(lsblk -no PARTUUID "${GET_BOOT}")
 fi
-BOOT_PART=$(lsblk -no PARTUUID "${GET_BOOT}")
 
 # Caches result of 'nproc'
 NPROC=$(nproc)
