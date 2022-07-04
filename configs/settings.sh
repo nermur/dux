@@ -14,7 +14,7 @@ no_mitigations="1"
 auto_software_catalog="1"
 
 # Uninstalls low-quality software Manjaro may include by default.
-auto_remove_software="1"
+#auto_remove_software="1"
 
 # === Desktop Environment: GNOME ===
 # It's not recommended to run the non-riced/vanilla GNOME.

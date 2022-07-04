@@ -11,6 +11,9 @@ endif::[]
 
 NOTE: Skip to link:0.1_start.adoc[0.1_start.adoc] for installation.
 
+WARNING: This has some known bugs that are being dealt with in the C++ rewrite of Dux. +
+This Bash version of Dux is abandoned.
+
 == Requirements
 * A x86_64 processor/CPU; arm64 and others aren't officially supported, but might work fine.
 * link:https://archive.is/QwLMB[Disable UEFI Secure Boot]
