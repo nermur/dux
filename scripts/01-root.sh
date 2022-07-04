@@ -52,7 +52,7 @@ _package_installers() {
     PKGS+="gnome-logs dconf-editor flatpak gsettings-desktop-schemas xdg-desktop-portal xdg-desktop-portal-gtk ibus \
     kconfig \
     iwd bluez bluez-utils \
-    irqbalance zram-generator power-profiles-daemon thermald dbus-broker gamemode lib32-gamemode \
+    irqbalance zram-generator power-profiles-daemon thermald dbus-broker gamemode lib32-gamemode iptables-nft \
     libnewt pigz pbzip2 strace usbutils avahi nss-mdns \
     man-db man-pages pacman-contrib bat \
     trash-cli rebuild-detector base-devel \
@@ -133,6 +133,8 @@ _bootloader_setup() {
     _grub2_bootloader_config
 }
 _system_configuration() {
+    systemctl mask systemd-oomd.service
+
     # gamemode: Allows for maximum performance while a specific program is running.
     groupadd --force -g 385 gamemode
     # Why 'video': https://github.com/Hummer12007/brightnessctl/issues/63

@@ -58,28 +58,28 @@ _gpu() {
 }
 _gpu
 
-if [[ ${XDG_SESSION_DESKTOP} = "GNOME" ]] && [[ ${auto_gnome_rice} -eq 1 ]]; then
+if [[ ${XDG_SESSION_DESKTOP} = "gnome" ]] && [[ ${auto_gnome_rice} -eq 1 ]]; then
     ("${GIT_DIR}/scripts/rice_GNOME.sh") |& tee "${GIT_DIR}/logs/rice_GNOME.log" || return
-
-    (sudo -H -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/non-SU/rice_GNOME_part2.sh") |& tee "${GIT_DIR}/logs/rice_GNOME_part2.log" || return
 
 elif [[ ${XDG_SESSION_DESKTOP} = "KDE" ]] && [[ ${automatic_kde_rice} -eq 1 ]]; then
     ("${GIT_DIR}/scripts/rice_KDE.sh") |& tee "${GIT_DIR}/logs/rice_KDE.log" || return
 
-    (sudo -H -u "${WHICH_USER}" DENY_SUPERUSER=1 ${SYSTEMD_USER_ENV} bash "${GIT_DIR}/scripts/non-SU/rice_KDE_part2.sh") |& tee "${GIT_DIR}/logs/rice_KDE_part2.log" || return
 fi
 
-_03() {
-    ("${GIT_DIR}/scripts/03-finalize.sh") |& tee "${GIT_DIR}/logs/03-finalize.log" || return
-}
-_03
-
 # OBS Studio installer depends on kernel headers being present, thus it's past _03.
-_software_catalog(){
+_software_catalog() {
     [[ ${auto_software_catalog} -eq 1 ]] &&
         ("${GIT_DIR}/scripts/software_catalog.sh") |& tee "${GIT_DIR}/logs/software_catalog.log" || return
 }
 _software_catalog
+
+_cleanup() {
+    pacman -S --quiet --noconfirm --ask=4 --overwrite="*" mkinitcpio
+
+    chown -R "${WHICH_USER}:${WHICH_USER}" "${GIT_DIR}"
+    echo "%wheel ALL=(ALL) ALL" >/etc/sudoers.d/custom_settings
+}
+_cleanup
 
 whiptail --yesno "A reboot is required to complete installation.\nAfter rebooting, read through 0.3_booted.adoc.\nReboot now?" 0 0 &&
     reboot -f
